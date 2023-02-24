@@ -10,7 +10,6 @@ LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../../common/log.sh
 source $SCRIPT_HOME/check_cpu.sh
 source $SCRIPT_HOME/check_mem.sh
-source $SCRIPT_HOME/check_disk.sh
 
 function main() {
   check_cpu_configuration
