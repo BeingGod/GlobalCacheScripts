@@ -1,0 +1,6 @@
+[arch_fedora_online]
+name=arch_fedora 
+baseurl=https://repo.huaweicloud.com/fedora/releases/34/Everything/aarch64/os/
+enabled=1
+gpgcheck=0 
+priority=2

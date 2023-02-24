@@ -1,0 +1,6 @@
+[local-oath]
+name=local-oath
+baseurl=file:///home/oath
+enabled=1
+gpgcheck=0 
+priority=1"
