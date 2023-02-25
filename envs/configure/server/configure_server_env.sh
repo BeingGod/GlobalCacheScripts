@@ -117,6 +117,8 @@ function create_openSSL_link()
 
 function main()
 {
+  pushd /home
+
   globalcache_log "------------configure Global Cache environment start------------" WARN
 
   create_oath_local_source
@@ -134,5 +136,7 @@ function main()
   create_openSSL_link
 
   globalcache_log "------------configure Global Cache environment success------------" WARN
+
+  popd
 }
 main

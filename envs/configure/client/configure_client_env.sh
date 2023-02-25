@@ -122,6 +122,8 @@ function create_gc_user_and_group()
 
 function main()
 {
+  pushd /home
+
   configure_profile
 
   install_dependency_packages
@@ -139,5 +141,6 @@ function main()
   create_gc_user_and_group
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure Global Cache environment failed!" ERROR && return 1
 
+  popd
 }
 main

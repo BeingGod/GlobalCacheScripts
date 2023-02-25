@@ -13,8 +13,6 @@ function configure_compile()
 {
     globalcache_log "------------Configure compile node environment start------------" WARN
     
-    cd /home
-
     # 检查依赖包是否上传完毕
     if [ ! -f "/home/OpenJDK8U-jdk_aarch64_linux_hotspot_jdk8u282-b08.tar.gz" ] ; then
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:not found java package!" ERROR && return 1
@@ -56,6 +54,10 @@ function configure_compile()
 
 function main()
 {
-   configure_compile
+    pushd /home
+
+    configure_compile
+
+    popd
 }
 main
