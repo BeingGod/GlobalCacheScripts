@@ -38,7 +38,7 @@ function configure_compile()
     
     # 配置maven
     tar -zxvf apache-maven-3.6.3-bin.tar.gz -C /usr/local
-    cp -f $SCRIPT_HOME/settings.xml.template /usr/local/apache-maven-3.6.3/conf/settings.xml
+    cp -f $SCRIPT_HOME/settings.xml /usr/local/apache-maven-3.6.3/conf/settings.xml
     echo -e 'MAVEN_HOME=/usr/local/apache-maven-3.6.3\nexport MAVEN_HOME\nexport PATH=${PATH}:$MAVEN_HOME/bin' >> /etc/profile
 
     source /etc/profile
