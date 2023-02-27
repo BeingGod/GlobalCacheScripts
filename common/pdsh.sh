@@ -7,7 +7,7 @@
 set -e
 function gloablcache_pdsh_usage()
 {
-  echo "Usage: globalcache_pdsh <hosts> <command>"
+  echo "Usage: globalcache_pdsh <command> <all/ceph/client/ceph1/ex_ceph1>"
 }
 
 function globalcache_pdsh()
@@ -17,5 +17,5 @@ function globalcache_pdsh()
     return 1
   fi
 
-  pdsh -a -w $1 $2
+  pdsh -R ssh -g $2 $1
 }
