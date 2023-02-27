@@ -69,6 +69,23 @@ function configure_hostname()
   globalcache_log "------------configure hostname end------------" WARN
 }
 
+# 设置linux安全模式
+function configure_permissive_mode()
+{
+  globalcache_log "------------configure permissive mode start------------" WARN
+
+  if [[ $(cat /etc/selinux/config | grep "SELINUX=enforcing" | wc -l) -eq 1 ]]; then
+    setenforce permissive
+    [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure permissive mode failed!" ERROR && return 1
+
+    sed -i 's/SELINUX=enforcing/SELINUX=permissive' /etc/selinux/config
+  else
+    globalcache_log "------------Linux is already in permissive mode------------" INFO
+  fi
+
+  globalcache_log "------------configure permissive mode end------------" WARN
+}
+
 # 配置免密访问
 function configure_ssh_key()
 {
@@ -127,6 +144,26 @@ EOF
   globalcache_log "------------configure ssh key end------------" WARN
 }
 
+# 设置pdsh组
+function configure_pdsh_group()
+{
+  globalcache_log "------------configure pdsh group start------------" WARN
+
+  if [ ! -d "/etc/dsh/group" ]; then
+    mkdir -p /etc/dsh/group
+  else
+    globalcache_log "The /etc/dsh/group is already exist." INFO
+  fi
+
+  cat $SCRIPT_HOME/hostnamelist.txt | grep -E -oe "ceph1" > /etc/dsh/group/ceph1                                  # ceph1
+  cat $SCRIPT_HOME/hostnamelist.txt | grep -E -oe "ceph[0-9]*" > /etc/dsh/group/ceph                              # all ceph
+  cat $SCRIPT_HOME/hostnamelist.txt | grep -E -oe "client[0-9]*" > /etc/dsh/group/client                          # all client
+  cat $SCRIPT_HOME/hostnamelist.txt | grep -E -oe "(ceph[0-9]*)|(client[0-9]*)" > /etc/dsh/group/all              # all 
+  cat $SCRIPT_HOME/hostnamelist.txt | grep -E -oe "(ceph[2-9]{1}[0-9]*)|(client[0-9]*)" > /etc/dsh/group/ex_ceph1 # exclude ceph1
+
+  globalcache_log "------------configure pdsh group end------------" WARN
+}
+
 function main()
 {
   # 判断配置文件是否存在
@@ -149,13 +186,23 @@ function main()
   configure_hostname
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ceph env failed!" ERROR && return 1
 
+  # 设置linux安全模式
+  configure_permissive_mode
+  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ceph env failed!" ERROR && return 1
+
+  # 清除已有公钥
+  rm -rf /root/.ssh/authorized_keys
+
   if [[ $hostname = "ceph1" ]]; then
+     # 配置SSH互信
+    configure_ssh_key
+    [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ceph env failed!" ERROR && return 1
+
      # 编译并安装pdsh
     compile_pdsh_build
     [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ceph env failed!" ERROR && return 1
 
-    # 配置SSH互信
-    configure_ssh_key
+    configure_pdsh_group
     [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ceph env failed!" ERROR && return 1
   fi
 }

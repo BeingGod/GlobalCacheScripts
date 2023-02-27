@@ -30,7 +30,7 @@ function pdsh_compile()
     globalcache_log "------------pdsh compile start------------" WARN
     
     cd /home/pdsh-2.34
-    ./configure
+    ./configure --with-ssh --with-exec --with-mrsh --with-dshgroups
     [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure pdsh makefile failed!" ERROR && return 1
     
     make -j4

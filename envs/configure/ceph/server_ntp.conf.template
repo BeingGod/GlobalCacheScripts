@@ -1,6 +1,0 @@
-restrict 127.0.0.1
-restrict ::1
-restrict <ip> mask <mask>
-server 127.127.1.0
-fudge 127.127.1.0
-stratum 8

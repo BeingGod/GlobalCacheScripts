@@ -1,0 +1,5 @@
+hostname: <hostname>
+ip: <ip>
+mask: <mask>
+ntp_server: <ntp server ip>
+password: <password>
