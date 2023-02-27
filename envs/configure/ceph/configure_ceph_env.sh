@@ -88,7 +88,7 @@ function configure_ntp()
   fi
 
   # 判断ntpd服务是否开启
-  if [[ $(systemctl status ntpd | grep "activ"e | wc -l) -ne 1 ]]; then
+  if [[ $(systemctl status ntpd | grep active | wc -l) -ne 1 ]]; then
     systemctl start ntpd 
     systemctl enable ntpd 
   fi
