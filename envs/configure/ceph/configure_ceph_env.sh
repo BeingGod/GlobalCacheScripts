@@ -12,6 +12,11 @@ source $SCRIPT_HOME/../../../common/pdsh.sh
 
 function main()
 {
+  if [ ! -f "$SCRIPT_HOME/script.conf" ]; then
+    globalcache_log "Please generated script config file first" WARN
+    globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ceph env failed!" ERROR && return 1
+  fi
+
   globalcache_pdsh "bash $SCRIPT_HOME/pdsh_configure_ntp_server.sh" ceph1
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ceph env failed!" ERROR && return 1
 
