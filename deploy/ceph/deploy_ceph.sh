@@ -10,6 +10,7 @@ LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../../common/log.sh
 source $SCRIPT_HOME/../../common/pdsh.sh
 
+# 部署mon节点
 function deploy_mon()
 {
   globalcache_log "------------deploy mon start------------" WARN
@@ -72,6 +73,7 @@ mon_allow_pool_delete = true" > /etc/ceph/ceph.conf
   globalcache_log "------------deploy mon end------------" WARN
 }
 
+# 部署mgr节点
 function deploy_mgr()
 {
   globalcache_log "------------deploy mgr start------------" WARN
@@ -92,6 +94,48 @@ function deploy_mgr()
   globalcache_log "------------deploy mgr end------------" WARN
 }
 
+# 部署osd节点
+function deploy_osd()
+{
+  globalcache_log "------------deploy osd start------------" WARN
+
+  globalcache_pdsh "bash $SCRIPT_HOME/pdsh_partition.sh" ceph
+  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:partition failed!" ERROR && return 1
+
+  cd /etc/ceph
+
+  local ceph=$(cat $SCRIPT_HOME/hostnamelist.txt | grep -E -oe "ceph[0-9]*")
+  local nvme_list=$(cat $SCRIPT_HOME/disklist.txt | grep -E -oe "nvme([0-9]*)n([0-9]*)")
+  local nvme_num=$(cat $SCRIPT_HOME/disklist.txt | grep -E -oe "nvme([0-9]*)n([0-9]*)" | wc -l)
+  local data_disk_list=($(cat $SCRIPT_HOME/disklist.txt | grep -E -oe "sd[a-z]"))
+  local data_disk_num=$(cat $SCRIPT_HOME/disklist.txt | grep -E -oe "sd[a-z]" | wc -l)
+  local part_per_nvme=$(expr $data_disk_num / $nvme_num)
+  for node in $ceph
+  do
+    local start=0
+    local end=$(expr $part_per_nvme - 1)
+    for nvme in $nvme_list
+    do
+      local j=1
+      local k=2
+      for index in $(seq $start $end)
+      do
+        ceph-deploy osd create ${node} --data '/dev/${data_disk_list[${index}]}' --block-wal '/dev/${nvme}p${j}' --block-db '/dev/${nvme}p${k}'
+        [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:deploy osd failed!" ERROR && return 1
+        ((j=${j}+2))
+        ((k=${k}+2))
+        sleep 3
+      done
+      local start=$(expr $start + $part_per_nvme)
+      local end=$(expr $end + $part_per_nvm)
+    done
+  done
+
+  ceph -s
+
+  globalcache_log "------------deploy osd end------------" WARN
+}
+
 function main()
 {
   if [ ! -f "$SCRIPT_HOME/script.conf" ]; then
@@ -106,6 +150,9 @@ function main()
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:deploy ceph failed!" ERROR && return 1
 
   deploy_mgr
+  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:deploy ceph failed!" ERROR && return 1
+
+  deploy_osd
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:deploy ceph failed!" ERROR && return 1
 }
 main
