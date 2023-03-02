@@ -19,11 +19,9 @@ function create_oath_local_source()
     mkdir -p /home/oath
   fi
 
-  pushd /home/oath
+  cd /home/oath
   createrepo .
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:create oath local source failed!" ERROR && return 1
-
-  popd
 
   globalcache_log "------------create oath local source end------------" WARN
 }
@@ -46,15 +44,15 @@ function install_jdk()
 {
   globalcache_log "------------install jdk end------------" WARN
 
-  pushd /home
-  # dnf install -y tar
-  # [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install tar failed!" ERROR && return 1
+  cd /home
+
+  dnf install -y tar
+  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install tar failed!" ERROR && return 1
   
   if [ ! -d /usr/local/jdk8u282-b08 ]; then
     tar -zxvf OpenJDK8U-jdk_aarch64_linux_hotspot_jdk8u282-b08.tar.gz -C /usr/local/
     [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:extract jdk package failed!" ERROR && return 1
   fi
-  popd
 
   echo "export JAVA_HOME=/usr/local/jdk8u282-b08" >> /etc/profile
   echo "export PATH=\$\{JAVA_HOME}/bin:\$PATH" >> /etc/profile
@@ -72,12 +70,13 @@ function compile_openSSL()
 {
   globalcache_log "------------compile openSSL start------------" WARN
 
-  pushd /usr/local
-  # yum install net-tools expect haveged dos2unix -y
-  # [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install wget dependencies failed!" ERROR && return 1
+  cd /usr/local
 
-  # dnf install -y wget
-  # [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install wget failed!" ERROR && return 1
+  yum install net-tools expect haveged dos2unix -y
+  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install wget dependencies failed!" ERROR && return 1
+
+  dnf install -y wget
+  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install wget failed!" ERROR && return 1
 
   if [ ! -f openssl-1.1.1k.tar.gz ]; then
     wget https://www.openssl.org/source/old/1.1.1/openssl-1.1.1k.tar.gz --no-check-certificate
@@ -117,8 +116,6 @@ function create_openSSL_link()
 
 function main()
 {
-  pushd /home
-
   globalcache_log "------------configure Global Cache environment start------------" WARN
 
   create_oath_local_source
@@ -136,7 +133,5 @@ function main()
   create_openSSL_link
 
   globalcache_log "------------configure Global Cache environment success------------" WARN
-
-  popd
 }
 main
