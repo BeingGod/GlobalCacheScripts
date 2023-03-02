@@ -1,6 +1,6 @@
 #!/bin/bash
 #------------------------------------------------------------------------------------
-# Description: ceph部署脚本
+# Description: ceph部署脚本 (ceph1)
 # Author: beinggod
 # Create: 2023-02-28
 #-----------------------------------------------------------------------------------
@@ -8,7 +8,6 @@ set -e
 SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../../common/log.sh
-source $SCRIPT_HOME/../../common/pdsh.sh
 
 # 部署mon节点
 function deploy_mon()
@@ -99,9 +98,6 @@ function deploy_osd()
 {
   globalcache_log "------------deploy osd start------------" WARN
 
-  globalcache_pdsh "bash $SCRIPT_HOME/pdsh_partition.sh" ceph
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:partition failed!" ERROR && return 1
-
   cd /etc/ceph
 
   local ceph=$(cat $SCRIPT_HOME/hostnamelist.txt | grep -E -oe "ceph[0-9]*")
@@ -142,9 +138,6 @@ function main()
     globalcache_log "Please generated script config file first" WARN
     globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:deploy ceph failed!" ERROR && return 1
   fi
-
-  globalcache_pdsh "bash $SCRIPT_HOME/pdsh_install_ceph.sh" ceph
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:deploy ceph failed!" ERROR && return 1
 
   deploy_mon
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:deploy ceph failed!" ERROR && return 1

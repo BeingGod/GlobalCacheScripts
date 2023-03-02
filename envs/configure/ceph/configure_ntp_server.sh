@@ -1,7 +1,6 @@
 #!/bin/bash
 #------------------------------------------------------------------------------------
-# Description: 配置ntp服务端
-#              注意: 该脚本需要使用pdsh调用
+# Description: 配置ntp服务端 (ceph1)
 # Author: beinggod
 # Create: 2023-2-27
 #-----------------------------------------------------------------------------------
@@ -47,4 +46,15 @@ stratum 8"
 
   globalcache_log "------------configure ntp server end------------" WARN
 }
-configure_ntp_server
+
+function main()
+{
+  if [ ! -f "$SCRIPT_HOME/script.conf" ]; then
+    globalcache_log "Please generated script config file first" WARN
+    globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ceph env failed!" ERROR && return 1
+  fi
+
+  configure_ntp_server
+  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ntp server failed!" ERROR && return 1
+}
+main

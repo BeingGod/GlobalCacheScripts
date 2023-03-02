@@ -1,7 +1,6 @@
 #!/bin/bash
 #------------------------------------------------------------------------------------
-# Description: 配置ntp客户端
-#              注意: 该脚本需要使用pdsh调用
+# Description: 配置ntp客户端 (exclude ceph1)
 # Author: beinggod
 # Create: 2023-2-27
 #-----------------------------------------------------------------------------------
@@ -9,7 +8,6 @@ set -e
 SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../../../common/log.sh
-source $SCRIPT_HOME/../../../common/pdsh.sh
 
 # 配置ntp客户端
 function configure_ntp_client()
@@ -53,4 +51,15 @@ function configure_ntp_client()
 
   globalcache_log "------------configure ntp client end------------" WARN
 }
-configure_ntp_client
+
+function main()
+{
+  if [ ! -f "$SCRIPT_HOME/script.conf" ]; then
+    globalcache_log "Please generated script config file first" WARN
+    globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ceph env failed!" ERROR && return 1
+  fi
+
+  configure_ntp_client
+  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ntp client failed!" ERROR && return 1
+}
+main
