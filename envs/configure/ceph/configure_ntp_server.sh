@@ -14,7 +14,7 @@ function configure_ntp_server()
 {
   globalcache_log "------------configure ntp server start------------" WARN
 
-  local hostname=$(cat $SCRIPT_HOME/script.conf | grep hostname | cut -d ' ' -f 2)
+  local hostname=$(cat /home/script.conf | grep hostname | cut -d ' ' -f 2)
 
   # 判断ntp是否安装
   yum -y install ntp ntpdate
@@ -26,8 +26,8 @@ function configure_ntp_server()
     rm -rf /etc/ntp.conf
   fi
 
-  local server_ip=$(cat $SCRIPT_HOME/script.conf | grep ntp_server | cut -d ' ' -f 2)
-  local mask=$(cat $SCRIPT_HOME/script.conf | grep mask | cut -d ' ' -f 2)
+  local server_ip=$(cat /home/script.conf | grep ntp_server | cut -d ' ' -f 2)
+  local mask=$(cat /home/script.conf | grep mask | cut -d ' ' -f 2)
 
   # 更新配置ntpd文件
   echo "restrict 127.0.0.1
@@ -49,7 +49,7 @@ stratum 8"
 
 function main()
 {
-  if [ ! -f "$SCRIPT_HOME/script.conf" ]; then
+  if [ ! -f "/home/script.conf" ]; then
     globalcache_log "Please generated script config file first" WARN
     globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ceph env failed!" ERROR && return 1
   fi

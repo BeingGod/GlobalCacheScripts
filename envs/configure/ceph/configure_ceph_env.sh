@@ -58,12 +58,12 @@ function configure_hostname()
 {
   globalcache_log "------------configure hostname start------------" WARN
 
-  local hostname=$(cat $SCRIPT_HOME/script.conf | grep "hostname" | cut -d " " -f 2)
+  local hostname=$(cat /home/script.conf | grep "hostname" | cut -d " " -f 2)
 
   hostnamectl --static set-hostname $hostname
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure hostname failed!" ERROR && return 1
 
-  cat $SCRIPT_HOME/hostnamelist.txt >> /etc/hosts
+  cat /home/hostnamelist.txt >> /etc/hosts
 
   globalcache_log "------------configure hostname end------------" WARN
 }
@@ -107,10 +107,10 @@ EOF
 
   chmod 700 /root/.ssh
 
-  local password=$(cat $SCRIPT_HOME/script.conf | grep password | cut -d ' ' -f 2)
+  local password=$(cat /home/script.conf | grep password | cut -d ' ' -f 2)
 
-  local ceph_num=$(cat $SCRIPT_HOME/hostnamelist.txt | grep ceph | wc -l)
-  local client_num=$(cat $SCRIPT_HOME/hostnamelist.txt | grep client | wc -l)
+  local ceph_num=$(cat /home/hostnamelist.txt | grep ceph | wc -l)
+  local client_num=$(cat /home/hostnamelist.txt | grep client | wc -l)
 
   # 发送公钥到ceph节点
   for i in $(seq 1 $ceph_num)
@@ -154,11 +154,11 @@ function configure_pdsh_group()
     globalcache_log "The /etc/dsh/group is already exist." INFO
   fi
 
-  cat $SCRIPT_HOME/hostnamelist.txt | grep -E -oe "ceph1" > /etc/dsh/group/ceph1                                  # ceph1
-  cat $SCRIPT_HOME/hostnamelist.txt | grep -E -oe "ceph[0-9]*" > /etc/dsh/group/ceph                              # all ceph
-  cat $SCRIPT_HOME/hostnamelist.txt | grep -E -oe "client[0-9]*" > /etc/dsh/group/client                          # all client
-  cat $SCRIPT_HOME/hostnamelist.txt | grep -E -oe "(ceph[0-9]*)|(client[0-9]*)" > /etc/dsh/group/all              # all 
-  cat $SCRIPT_HOME/hostnamelist.txt | grep -E -oe "(ceph[2-9]{1}[0-9]*)|(client[0-9]*)" > /etc/dsh/group/ex_ceph1 # exclude ceph1
+  cat /home/hostnamelist.txt | grep -E -oe "ceph1" > /etc/dsh/group/ceph1                                  # ceph1
+  cat /home/hostnamelist.txt | grep -E -oe "ceph[0-9]*" > /etc/dsh/group/ceph                              # all ceph
+  cat /home/hostnamelist.txt | grep -E -oe "client[0-9]*" > /etc/dsh/group/client                          # all client
+  cat /home/hostnamelist.txt | grep -E -oe "(ceph[0-9]*)|(client[0-9]*)" > /etc/dsh/group/all              # all 
+  cat /home/hostnamelist.txt | grep -E -oe "(ceph[2-9]{1}[0-9]*)|(client[0-9]*)" > /etc/dsh/group/ex_ceph1 # exclude ceph1
 
   globalcache_log "------------configure pdsh group end------------" WARN
 }
@@ -166,12 +166,12 @@ function configure_pdsh_group()
 function main()
 {
   # 判断配置文件是否存在
-  if [ ! -f "$SCRIPT_HOME/script.conf" ]; then
+  if [ ! -f "/home/script.conf" ]; then
     globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:Please generate configure file first!" WARN
     [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ceph env failed!" ERROR && return 1
   fi
 
-  local hostname=$(cat $SCRIPT_HOME/script.conf | grep "hostname" | cut -d " " -f 2)
+  local hostname=$(cat /home/script.conf | grep "hostname" | cut -d " " -f 2)
 
   # 安装compat-openssl
   install_compat_openssl

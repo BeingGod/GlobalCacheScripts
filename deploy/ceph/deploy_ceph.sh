@@ -17,7 +17,7 @@ function deploy_mon()
   cd /etc/ceph
 
   local members=""
-  for ceph in $(cat $SCRIPT_HOME/hostnamelist.txt | grep -E -oe "ceph[0-9]*")
+  for ceph in $(cat /home/hostnamelist.txt | grep -E -oe "ceph[0-9]*")
   do
     members="$members $ceph"
   done
@@ -27,7 +27,7 @@ function deploy_mon()
 
   local members=""
   local hosts=""
-  for line in $(cat $SCRIPT_HOME/hostnamelist.txt | grep -E "ceph[0-9]*")
+  for line in $(cat /home/hostnamelist.txt | grep -E "ceph[0-9]*")
   do
     members="$members,$(echo $line | cut -d ' ' -f 2)"
     hosts="$hosts,$(echo $line | cut -d ' ' -f 1)"
@@ -45,8 +45,8 @@ auth_cluster_required = cephx
 auth_service_required = cephx
 auth_client_required = cephx
 
-public_network = $(cat $SCRIPT_HOME/script.conf | grep public_network | cut -d ' ' -f 2)
-cluster_network =  $(cat $SCRIPT_HOME/script.conf | grep public_network | cut -d ' ' -f 2)
+public_network = $(cat /home/script.conf | grep public_network | cut -d ' ' -f 2)
+cluster_network =  $(cat /home/script.conf | grep public_network | cut -d ' ' -f 2)
 
 bluestore_prefer_deferred_size_hdd = 0
 rbd_op_threads=16 # rbd tp线程数
@@ -59,7 +59,7 @@ mon_allow_pool_delete = true" > /etc/ceph/ceph.conf
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:init deploy mon failed!" ERROR && return 1
 
   local nodes=""
-  for node in $(cat $SCRIPT_HOME/hostnamelist.txt | grep -E -oe "(ceph[0-9]*)|(client[0-9]*)")
+  for node in $(cat /home/hostnamelist.txt | grep -E -oe "(ceph[0-9]*)|(client[0-9]*)")
   do
     nodes="$nodes $node"
   done
@@ -80,7 +80,7 @@ function deploy_mgr()
   cd /etc/ceph
 
   local members=""
-  for ceph in $(cat $SCRIPT_HOME/hostnamelist.txt | grep -E -oe "ceph[0-9]*")
+  for ceph in $(cat /home/hostnamelist.txt | grep -E -oe "ceph[0-9]*")
   do
     members="$members $ceph"
   done
@@ -100,11 +100,11 @@ function deploy_osd()
 
   cd /etc/ceph
 
-  local ceph=$(cat $SCRIPT_HOME/hostnamelist.txt | grep -E -oe "ceph[0-9]*")
-  local nvme_list=$(cat $SCRIPT_HOME/disklist.txt | grep -E -oe "nvme([0-9]*)n([0-9]*)")
-  local nvme_num=$(cat $SCRIPT_HOME/disklist.txt | grep -E -oe "nvme([0-9]*)n([0-9]*)" | wc -l)
-  local data_disk_list=($(cat $SCRIPT_HOME/disklist.txt | grep -E -oe "sd[a-z]"))
-  local data_disk_num=$(cat $SCRIPT_HOME/disklist.txt | grep -E -oe "sd[a-z]" | wc -l)
+  local ceph=$(cat /home/hostnamelist.txt | grep -E -oe "ceph[0-9]*")
+  local nvme_list=$(cat /home/disklist.txt | grep -E -oe "nvme([0-9]*)n([0-9]*)")
+  local nvme_num=$(cat /home/disklist.txt | grep -E -oe "nvme([0-9]*)n([0-9]*)" | wc -l)
+  local data_disk_list=($(cat /home/disklist.txt | grep -E -oe "sd[a-z]"))
+  local data_disk_num=$(cat /home/disklist.txt | grep -E -oe "sd[a-z]" | wc -l)
   local part_per_nvme=$(expr $data_disk_num / $nvme_num)
   for node in $ceph
   do
@@ -134,7 +134,7 @@ function deploy_osd()
 
 function main()
 {
-  if [ ! -f "$SCRIPT_HOME/script.conf" ]; then
+  if [ ! -f "/home/script.conf" ]; then
     globalcache_log "Please generated script config file first" WARN
     globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:deploy ceph failed!" ERROR && return 1
   fi

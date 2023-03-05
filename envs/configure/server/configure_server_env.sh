@@ -31,10 +31,46 @@ function configure_repo()
 {
   globalcache_log "------------configure mirror repo start------------" WARN
 
-  cat $SCRIPT_HOME/oath.repo >> /etc/yum.repos.d/local.repo
-  cat $SCRIPT_HOME/openEuler.repo >> /etc/yum.repos.d/openEuler.repo
+  echo "[local-oath]
+name=local-oath
+baseurl=file:///home/oath
+enabled=1
+gpgcheck=0 
+priority=1" >> /etc/yum.repos.d/local.repo
 
-  cp $SCRIPT_HOME/ceph.repo /etc/yum.repos.d/ceph.repo
+  echo "[arch_fedora_online]
+name=arch_fedora 
+baseurl=https://repo.huaweicloud.com/fedora/releases/34/Everything/aarch64/os/
+enabled=1
+gpgcheck=0 
+priority=2" >> /etc/yum.repos.d/openEuler.repo
+
+  echo "[Ceph] 
+name=Ceph packages for $basearch 
+baseurl=http://download.ceph.com/rpm-nautilus/el7/$basearch 
+enabled=1 
+gpgcheck=1 
+type=rpm-md 
+gpgkey=https://download.ceph.com/keys/release.asc 
+priority=1 
+
+[Ceph-noarch] 
+name=Ceph noarch packages 
+baseurl=http://download.ceph.com/rpm-nautilus/el7/noarch 
+enabled=1 
+gpgcheck=1 
+type=rpm-md 
+gpgkey=https://download.ceph.com/keys/release.asc 
+priority=1 
+
+[ceph-source] 
+name=Ceph source packages 
+baseurl=http://download.ceph.com/rpm-nautilus/el7/SRPMS 
+enabled=1 
+gpgcheck=1 
+type=rpm-md 
+gpgkey=https://download.ceph.com/keys/release.asc 
+priority=1" > /etc/yum.repos.d/ceph.repo
 
   globalcache_log "------------configure mirror repo end------------" WARN
 }

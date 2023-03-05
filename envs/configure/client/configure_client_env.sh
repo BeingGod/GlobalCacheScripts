@@ -49,21 +49,17 @@ function create_local_source()
     mkdir -p /home/rpm
   fi
 
-  pushd /home/rpm
+  cd /home/rpm
   createrepo .
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:create ceph local source failed!" ERROR && return 1
-
-  popd
 
   if [ ! -d /home/oath ]; then
     mkdir -p /home/oath
   fi
 
-  pushd /home/oath
+  cd /home/oath
   createrepo .
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:create oath local source failed!" ERROR && return 1
-
-  popd
 
   globalcache_log "------------create local source end------------" WARN
 } 
@@ -73,11 +69,23 @@ function configure_repo()
 {
   globalcache_log "------------configure mirror repo start------------" WARN
 
-
   if [ ! -f /etc/yum.repos.d/local.repo ]; then
     touch /etc/yum.repos.d/local.repo
   fi
-  cat $SCRIPT_HOME/local.repo >> /etc/yum.repos.d/local.repo
+  
+  echo "[local]
+name=local
+baseurl=file:///home/rpm
+enabled=1
+gpgcheck=0
+priority=1
+
+[local-oath]
+name=local-oath
+baseurl=file:///home/oath
+enabled=1
+gpgcheck=0
+priority=1" >> /etc/yum.repos.d/local.repo
 
   globalcache_log "------------configure mirror repo start------------" WARN
 }
@@ -87,7 +95,7 @@ function install_jdk()
 {
   globalcache_log "------------install jdk end------------" WARN
 
-  pushd /home
+  cd /home
   # dnf install -y tar
   # [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install tar failed!" ERROR && return 1
   
@@ -95,7 +103,6 @@ function install_jdk()
     tar -zxvf OpenJDK8U-jdk_aarch64_linux_hotspot_jdk8u282-b08.tar.gz -C /usr/local/
     [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:extract jdk package failed!" ERROR && return 1
   fi
-  popd
 
   echo "export JAVA_HOME=/usr/local/jdk8u282-b08" >> /etc/profile
   echo "export PATH=\$\{JAVA_HOME}/bin:\$PATH" >> /etc/profile
@@ -122,7 +129,7 @@ function create_gc_user_and_group()
 
 function main()
 {
-  pushd /home
+  cd /home
 
   configure_profile
 
@@ -140,7 +147,5 @@ function main()
 
   create_gc_user_and_group
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure Global Cache environment failed!" ERROR && return 1
-
-  popd
 }
 main

@@ -24,7 +24,7 @@ function configure_ntp_client()
     rm -rf /etc/ntp.conf
   fi
 
-  local server_ip=$(cat $SCRIPT_HOME/script.conf | grep ntp_server | cut -d ' ' -f 2)
+  local server_ip=$(cat /home/script.conf | grep ntp_server | cut -d ' ' -f 2)
   echo "server $server_ip" > /etc/ntp.conf
 
   # 判断ntpd服务是否开启
@@ -54,7 +54,7 @@ function configure_ntp_client()
 
 function main()
 {
-  if [ ! -f "$SCRIPT_HOME/script.conf" ]; then
+  if [ ! -f "/home/script.conf" ]; then
     globalcache_log "Please generated script config file first" WARN
     globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ceph env failed!" ERROR && return 1
   fi

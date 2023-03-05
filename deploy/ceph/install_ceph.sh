@@ -14,7 +14,7 @@ function install_ceph()
 {
   globalcache_log "------------install ceph start------------" WARN
 
-  local hostname=$(cat $SCRIPT_HOME/script.conf | grep hostname | cut -d ' ' -f 2)
+  local hostname=$(cat /home/script.conf | grep hostname | cut -d ' ' -f 2)
 
   echo "sslverify=false
 deltarpm=0" >> /etc/yum.conf # 设置yum证书验证状态
@@ -47,14 +47,14 @@ function partition()
 {
   globalcache_log "------------partition start------------" WARN
 
-  local nvme_list=$(cat $SCRIPT_HOME/disklist.txt | grep -E -oe "nvme([0-9]*)n([0-9]*)")
+  local nvme_list=$(cat /home/disklist.txt | grep -E -oe "nvme([0-9]*)n([0-9]*)")
   local nvme_num=$(echo $nvme_list | wc -l)
   for nvme in $nvme_list
   do
     parted -s /dev/$nvme mklabel gpt
   done
   
-  local data_disk_list=$(cat $SCRIPT_HOME/disklist.txt | grep -E -oe "sd[a-z]")
+  local data_disk_list=$(cat /home/disklist.txt | grep -E -oe "sd[a-z]")
   local data_disk_num=$(echo $data_disk_list | wc -l)
   local part_per_nvme=$(expr $data_disk_num / $nvme_num)
   local start=4
@@ -93,7 +93,7 @@ function main()
   install_ceph
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install ceph failed!" ERROR && return 1
 
-  hostname=$(cat $SCRIPT_HOME/script.conf | grep hostname | cut -d ' ' -f 2)
+  hostname=$(cat /home/script.conf | grep hostname | cut -d ' ' -f 2)
   if [[ $hostname = "ceph1" ]]; then
     install_ceph_deploy_tools
     [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install ceph deploy tools failed!" ERROR && return 1
