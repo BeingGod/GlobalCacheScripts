@@ -8,15 +8,13 @@ set -e
 SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../common/log.sh
-source $SCRIPT_HOME/bdm_init.sh
-source $SCRIPT_HOME/zookeeper_clean.sh
 
 function usage() 
 {
     printf "Usage: gc_service_control.sh <command> \n support command: start, restart, stop, clean, init \n"
 }
 
-# @brief bdm初始化
+# bdm初始化
 function bdm_init()
 {
     globalcache_log "------------bdm init start------------" WARN
@@ -31,7 +29,7 @@ function bdm_init()
     globalcache_log "------------bdm init end------------" WARN
 }
 
-# @brief zookeeper清理
+# zookeeper清理
 function zookeeper_clean()
 {
     globalcache_log "------------zookeeper clean start------------" WARN
@@ -57,7 +55,7 @@ function zookeeper_clean()
     globalcache_log "------------zookeeper clean end------------" WARN
 }
 
-# @brief 初始化gc服务
+# 初始化gc服务
 function start_gc_service()
 {
     globalcache_log "------------Global Cache service init...------------" WARN
@@ -75,7 +73,7 @@ function start_gc_service()
     globalcache_log "------------Global Cache service init success!------------" WARN
 }
 
-# @brief 停止gc服务
+# 停止gc服务
 function stop_gc_service()
 {
     globalcache_log "------------Global Cache service stop...------------" WARN
@@ -86,7 +84,7 @@ function stop_gc_service()
     globalcache_log "------------Global Cache service stoped------------" WARN
 }
 
-# @brief 重启gc服务
+# 重启gc服务
 function restart_gc_service()
 {
     systemctl stop ccm.service
@@ -114,6 +112,9 @@ function main()
             ;;
         init)
             bdm_init
+            ;;
+        clean)
+            zookeeper_clean
             ;;
         *)
             usage
