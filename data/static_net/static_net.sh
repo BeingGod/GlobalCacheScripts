@@ -7,7 +7,7 @@
 set -e
 SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=/var/log/globalcache_script.log
-source $SCRIPT_HOME/../common/log.sh
+source $SCRIPT_HOME/../../common/log.sh
 set "-e"
 
 # @brief 读取静态网卡信息
