@@ -7,7 +7,7 @@
 #-----------------------------------------------------------------------------------
 set -e
 SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
-LOG_FILE=/var/log/globalcache_script.log
+LOG_FILE=$SCRIPT_HOME/../log/globalcache_script.log
 source $SCRIPT_HOME/../common/log.sh
 source $SCRIPT_HOME/compile_liboath.sh # 引入compile_liboath.sh脚本
 source $SCRIPT_HOME/compile_zookeeper.sh # 引入compile_zookeeper.sh脚本

@@ -13,8 +13,12 @@ source $SCRIPT_HOME/check_mem.sh
 
 function main() {
   check_cpu_configuration
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:check cpu failed!" ERROR && return 1
+  if [[ $? -ne 0 ]]; then
+    globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:check cpu failed!" ERROR && return 1
+  fi
   check_mem_configuration
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:check mem failed!" ERROR && return 2
+  if [[ $? -ne 0 ]]; then
+    globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:check mem failed!" ERROR && return 2
+  fi
 }
 main
