@@ -9,6 +9,8 @@ SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../common/log.sh
 
+set "-e"
+
 function usage() 
 {
     printf "Usage: gc_service_control.sh <command> \n support command: start, restart, stop, clean, init \n"
@@ -96,6 +98,16 @@ function restart_gc_service()
     systemctl start globalcache.service
 }
 
+# 查看GC服务状态
+function status_gc_service()
+{
+    if [[ $(systemctl status globalcache.service | grep "GlobalCache Running" | wc -l) -ne 1 ]]; then
+        return 0;
+    else
+        return 1;
+    fi
+}
+
 function main()
 {
     local op=$1
@@ -115,6 +127,9 @@ function main()
             ;;
         clean)
             zookeeper_clean
+            ;;
+        status)
+            status_gc_service
             ;;
         *)
             usage
