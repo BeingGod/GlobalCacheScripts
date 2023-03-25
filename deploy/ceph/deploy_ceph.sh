@@ -123,7 +123,7 @@ function deploy_osd()
         sleep 3
       done
       local start=$(expr $start + $part_per_nvme)
-      local end=$(expr $end + $part_per_nvm)
+      local end=$(expr $end + $part_per_nvme)
     done
   done
 

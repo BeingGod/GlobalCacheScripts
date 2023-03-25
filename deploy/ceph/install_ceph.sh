@@ -75,9 +75,12 @@ function partition()
     local start=$end
   done
 
+  local ccm_part_num=`expr $part_per_nvme * 2 + 1`
+
   for nvme in $nvme_list
   do
     parted /dev/$nvme mkpart primary ${end}MiB 100%
+    sed -i "s/<device>/${nvme}p${ccm_part_num}" /home/nodelists.txt
   done
 
   for data_disk in $data_disk_list
