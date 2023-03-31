@@ -8,6 +8,7 @@
 set -e
 SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=/var/log/globalcache_script.log
+GLOBALCACHEOP_PWD=globalcacheop
 source $SCRIPT_HOME/../../common/log.sh
 
 set "-e"
@@ -50,6 +51,27 @@ function globalcache_install()
 
     chmod 550  /opt/gcache/lib/*
     chown globalcache:globalcache -R /opt/gcache/lib/
+
+    # 添加运维用户
+    if id -u globalcacheop >/dev/null 2>&1; then
+        echo "user globalcacheop exists"
+    else
+        echo "user globalcacheop does not exist"
+        echo "adding globalcachep, password is $globalcacheop_passwd"
+
+        useradd -p $(openssl passwd -1 $GLOBALCACHEOP_PWD) globalcacheop
+        usermod -a -G systemd-journal globalcacheop
+
+        echo "globalcacheop ALL=(root) /usr/bin/systemctl start ccm" >> /etc/sudoers
+        echo "globalcacheop ALL=(root) /usr/bin/systemctl stop ccm" >> /etc/sudoers
+        echo "globalcacheop ALL=(root) /usr/bin/systemctl status ccm" >> /etc/sudoers
+        echo "globalcacheop ALL=(root) /usr/bin/systemctl start" >> /etc/sudoers
+        echo "globalcacheop ALL=(root) /usr/bin/systemctl stop" >> /etc/sudoers
+        echo "globalcacheop ALL=(root) /usr/bin/systemctl status" >> /etc/sudoers
+        echo "globalcacheop ALL=(root) /usr/bin/systemctl start GlobalCache.target" >> /etc/sudoers
+        echo "globalcacheop ALL=(root) /usr/bin/systemctl stop GlobalCache.target" >> /etc/sudoers
+        echo "globalcacheop ALL=(root) /usr/bin/systemctl status GlobalCache.target" >> /etc/sudoers
+    fi
 
     globalcache_log "------------globalcache install end------------" WARN
 }

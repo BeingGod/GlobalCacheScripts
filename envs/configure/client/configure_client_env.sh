@@ -115,18 +115,6 @@ function install_jdk()
   globalcache_log "------------install jdk end------------" WARN
 }
 
-# 创建GC用户组和用户
-function create_gc_user_and_group()
-{
-  groupadd globalcache
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:add globalcache group failed!" ERROR && return 1
-
-  useradd -g globalcache -s /bin/bash globalcache
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:add globalcache user failed!" ERROR && return 1
-
-  # TODO: 设置默认密码
-}
-
 function main()
 {
   cd /home
@@ -143,9 +131,6 @@ function main()
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure Global Cache environment failed!" ERROR && return 1
 
   install_jdk
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure Global Cache environment failed!" ERROR && return 1
-
-  create_gc_user_and_group
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure Global Cache environment failed!" ERROR && return 1
 }
 main
