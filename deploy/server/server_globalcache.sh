@@ -73,6 +73,9 @@ function globalcache_install()
         echo "globalcacheop ALL=(root) /usr/bin/systemctl status GlobalCache.target" >> /etc/sudoers
     fi
 
+    chown -R globalcacheop:globalcacheop $SCRIPT_HOME/../../data
+    chmod 755 $SCRIPT_HOME/../../data
+
     globalcache_log "------------globalcache install end------------" WARN
 }
 
