@@ -1,4 +1,0 @@
-sdb
-sdc
-nvme0n1
-nvme1n1
