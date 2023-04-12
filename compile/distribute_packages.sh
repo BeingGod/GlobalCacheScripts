@@ -9,17 +9,6 @@ LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../common/log.sh
 set "-e"
 
-# 安装pdsh
-function install_pdsh()
-{
-    globalcache_log "------------install pdsh start------------" WARN
-
-    yum install pdsh -y
-    [[ $? -ne 0 ]] && log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install pdsh failed!" ERROR && return 1
-
-    globalcache_log "------------install pdsh end------------" WARN 
-}
-
 # 设置pdsh组
 function configure_pdsh_group()
 {
@@ -173,16 +162,10 @@ function distribute()
 
 function main()
 {
-    install_pdsh
-    [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install pdsh failed!" ERROR && return 1
-    
     configure_pdsh_group
-    [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure pdsh group failed!" ERROR && return 1
 
     configure_ssh_key
-    [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ssh key failed!" ERROR && return 1 
 
     distribute
-    [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:distribute failed!" ERROR && return 1 
 }
 main
