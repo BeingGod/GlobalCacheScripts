@@ -12,7 +12,7 @@ source $SCRIPT_HOME/../../common/log.sh
 # @brief 读取运行时间信息
 function main()
 {
-    local uptime=$(uptime | grep -E -oe "[0-9] days, \s*[0-9]*:[0-9]*,")
+    local uptime=$(uptime | grep -E -oe "[0-9]* days, \s*[0-9]*:[0-9]*,")
     if [[ -z $uptime ]]; then
        local uptime=$(uptime | grep -oe "[0-9]*:[0-9]*,")
     fi
