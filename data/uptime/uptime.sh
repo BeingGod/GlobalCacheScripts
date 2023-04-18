@@ -9,7 +9,7 @@ SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=$SCRIPT_HOME/../../log/globalcache_script.log
 source $SCRIPT_HOME/../../common/log.sh
 
-# @brief 读取运行时间信息
+#  读取运行时间信息
 function main()
 {
     local uptime=$(uptime | grep -E -oe "[0-9]* days, \s*[0-9]*:[0-9]*,")

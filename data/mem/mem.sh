@@ -9,7 +9,7 @@ SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=$SCRIPT_HOME/../../log/globalcache_script.log
 source $SCRIPT_HOME/../../common/log.sh
 
-# @brief 读取内存信息
+#  读取内存信息
 function main()
 {
     free | grep -oe "[0-9]*" # 内存以Byte为单位

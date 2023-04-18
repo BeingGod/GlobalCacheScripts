@@ -16,7 +16,7 @@ function usage()
     echo "$0:usage: <nodeId>"
 }
 
-# @brief 读取PT
+#  读取PT
 function main()
 {
     if [ $(ps -ef | grep "mgrtool" | wc -l) -eq 5 ]; then

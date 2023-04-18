@@ -10,7 +10,7 @@ LOG_FILE=$SCRIPT_HOME/../../log/globalcache_script.log
 source $SCRIPT_HOME/../../common/log.sh
 set "-e"
 
-# @brief 读取静态网卡信息
+#  读取静态网卡信息
 function main()
 {
     ip addr

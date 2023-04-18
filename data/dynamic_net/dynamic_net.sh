@@ -9,7 +9,7 @@ SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=$SCRIPT_HOME/../../log/globalcache_script.log
 source $SCRIPT_HOME/../../common/log.sh
 
-# @brief 读取动态网卡信息
+#  读取动态网卡信息
 function main()
 {
     sar -n DEV 1 1 | grep "Average"
