@@ -5,7 +5,7 @@
 # Author: xc
 # Create: 2022-04-01
 #-----------------------------------------------------------------------------------
-set -e
+set -x
 SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=$SCRIPT_HOME/../../log/globalcache_script.log
 source $SCRIPT_HOME/../../common/log.sh

@@ -4,7 +4,7 @@
 # Author: beinggod
 # Create: 2023-2-24
 #-----------------------------------------------------------------------------------
-set -e
+set -x
 LOG_FILE=/var/log/globalcache_script.log
 SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 source $SCRIPT_HOME/common/log.sh

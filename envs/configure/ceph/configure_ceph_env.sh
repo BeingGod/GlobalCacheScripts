@@ -4,7 +4,7 @@
 # Author: beinggod
 # Create: 2023-2-27
 #-----------------------------------------------------------------------------------
-set -e
+set -x
 SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../../../common/log.sh
@@ -112,20 +112,5 @@ function main()
   configure_permissive_mode
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ceph env failed!" ERROR && return 1
 
-  # 清除已有公钥
-  rm -rf /root/.ssh/authorized_keys
-
-  if [[ $hostname = "ceph1" ]]; then
-     # 配置SSH互信
-    configure_ssh_key
-    [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ceph env failed!" ERROR && return 1
-
-     # 编译并安装pdsh
-    compile_pdsh_build
-    [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ceph env failed!" ERROR && return 1
-
-    configure_pdsh_group
-    [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ceph env failed!" ERROR && return 1
-  fi
 }
 main
