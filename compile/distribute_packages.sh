@@ -29,63 +29,6 @@ function configure_pdsh_group()
   globalcache_log "------------configure pdsh group end------------" WARN
 }
 
-# 配置免密访问
-function configure_ssh_key()
-{
-  globalcache_log "------------configure ssh key start------------" WARN
-
-  # 生成公钥
-  if [ $(ls -al /root/.ssh/ | grep id_rsa | wc -l) -eq 0 ]; then
-    ssh-keygen -t rsa -N '' << EOF
-/root/.ssh/id_rsa
-yes
-
-EOF
-  else
-    globalcache_log "The ssh key is already exist." INFO
-  fi
-
-  # 生成失败
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:generate ssh key failed!" ERROR && return 1
-
-  chmod 700 /root/.ssh
-
-  local password=$(cat /home/script.conf | grep password | cut -d ' ' -f 2)
-
-  local ceph_num=$(cat /home/hostnamelist.txt | grep ceph | wc -l)
-  local client_num=$(cat /home/hostnamelist.txt | grep client | wc -l)
-
-  # 发送公钥到ceph节点
-  for i in $(seq 1 $ceph_num)
-  do
-      /usr/bin/expect <<EOF
-set timeout 5 
-spawn ssh-copy-id ceph$i
-expect {
-  "*yes/no" { send "yes\r"; exp_continue }
-  "*password:" { send "$password\r" }
-}
-expect eof
-EOF
-  done
-
-  # 发放公钥到client节点
-  for i in $(seq 1 $client_num)
-  do
-      /usr/bin/expect <<EOF
-set timeout 5 
-spawn ssh-copy-id client$i
-expect {
-  "*yes/no" { send "yes\r"; exp_continue }
-  "*password:" { send "$password\r" }
-}
-expect eof
-EOF
-  done
-
-  globalcache_log "------------configure ssh key end------------" WARN
-}
-
 function distribute()
 {
     globalcache_log "------------distribute packages start------------" WARN
@@ -163,8 +106,6 @@ function distribute()
 function main()
 {
     configure_pdsh_group
-
-    configure_ssh_key
 
     distribute
 }
