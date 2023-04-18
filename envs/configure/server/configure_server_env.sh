@@ -83,7 +83,6 @@ function install_jdk()
   cd /home
 
   dnf install -y tar
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install tar failed!" ERROR && return 1
   
   if [ ! -d /usr/local/jdk8u282-b08 ]; then
     tar -zxvf OpenJDK8U-jdk_aarch64_linux_hotspot_jdk8u282-b08.tar.gz -C /usr/local/
@@ -109,10 +108,8 @@ function compile_openSSL()
   cd /usr/local
 
   yum install net-tools expect haveged dos2unix -y
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install wget dependencies failed!" ERROR && return 1
 
   dnf install -y wget
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install wget failed!" ERROR && return 1
 
   if [ ! -f openssl-1.1.1k.tar.gz ]; then
     wget https://www.openssl.org/source/old/1.1.1/openssl-1.1.1k.tar.gz --no-check-certificate
@@ -120,15 +117,11 @@ function compile_openSSL()
   fi
 
   tar -zxvf openssl-1.1.1k.tar.gz
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:extract openSSL package failed!" ERROR && return 1
 
   cd openssl-1.1.1k
   ./config --prefix=/usr/local/ssl
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure openSSL failed!" ERROR && return 1
   make -j4
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:compile openSSL failed!" ERROR && return 1
   make install
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install openSSL failed!" ERROR && return 1
 
   popd
 

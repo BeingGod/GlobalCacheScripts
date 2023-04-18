@@ -16,7 +16,6 @@ function configure_ntp_client()
 
   # 判断ntp是否安装
   yum -y install ntp ntpdate
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install ntp failed!" ERROR && return 1
   
   mv /etc/ntp.conf /etc/ntp.conf.bak
 
@@ -39,7 +38,6 @@ function configure_ntp_client()
 
   # 安装crontab定时服务
   yum install -y crontabs
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install crontabs failed!" ERROR && return 1
 
   if [[ $(systemctl status crond | grep active | wc -l 1) -ne 1 ]]; then
     systemctl enable crond.service

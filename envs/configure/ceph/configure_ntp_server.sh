@@ -18,7 +18,6 @@ function configure_ntp_server()
 
   # 判断ntp是否安装
   yum -y install ntp ntpdate
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install ntp failed!" ERROR && return 1
   
   mv /etc/ntp.conf /etc/ntp.conf.bak
 

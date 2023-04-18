@@ -20,10 +20,8 @@ function install_ceph()
 deltarpm=0" >> /etc/yum.conf # 设置yum证书验证状态
 
   dnf -y install librados2-14.2.8 ceph-14.2.8
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install ceph failed!" ERROR && return 1
 
   pip install prettytable werkzeug
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install python package failed!" ERROR && return 1
 
   ceph -v
 

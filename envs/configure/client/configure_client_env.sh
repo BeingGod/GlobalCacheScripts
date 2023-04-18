@@ -35,7 +35,6 @@ function install_dependency_packages()
               leveldb leveldb-devel numactl numactl-devel rpmdevtools \
               rpm-build libtool python-pip python3-pip librbd-devel \
               git -y
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install dependency packages failed!" ERROR && return 1
 
   globalcache_log "------------install denpendency packages end------------" WARN
 }
@@ -96,8 +95,6 @@ function install_jdk()
   globalcache_log "------------install jdk end------------" WARN
 
   cd /home
-  # dnf install -y tar
-  # [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install tar failed!" ERROR && return 1
   
   if [ ! -d /usr/local/jdk8u282-b08 ]; then
     tar -zxvf OpenJDK8U-jdk_aarch64_linux_hotspot_jdk8u282-b08.tar.gz -C /usr/local/
