@@ -27,7 +27,6 @@ function install_compat_openssl()
     fi
     
     rpm -ivh compat-openssl10-1.0.2o-5.fc30.aarch64.rpm
-    [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install compat-openssl package failed!" ERROR && return 1
   else
     globalcache_log "The compat-openssl already installed." INFO
   fi
@@ -35,37 +34,6 @@ function install_compat_openssl()
   globalcache_log "------------install compat-openssl end------------" WARN
 
   return 0
-}
-
-# 关闭防火墙
-function close_firewall()
-{
-  globalcache_log "------------close firewall start------------" WARN
-
-  # 判断当前防火墙是否已经关闭
-  if [[ $(systemctl status firewalld | grep inactive | wc -l) -ne 1 ]]; then
-    systemctl stop firewalld
-    systemctl disable firewalld
-  else
-    globalcache_log "The firewalld is already closed" INFO
-  fi
-
-  globalcache_log "------------close firewall end------------" WARN
-}
-
-# 设置主机名
-function configure_hostname()
-{
-  globalcache_log "------------configure hostname start------------" WARN
-
-  local hostname=$(cat /home/script.conf | grep "hostname" | cut -d " " -f 2)
-
-  hostnamectl --static set-hostname $hostname
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure hostname failed!" ERROR && return 1
-
-  cat /home/hostnamelist.txt >> /etc/hosts
-
-  globalcache_log "------------configure hostname end------------" WARN
 }
 
 # 设置linux安全模式
@@ -98,14 +66,6 @@ function main()
 
   # 安装compat-openssl
   install_compat_openssl
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ceph env failed!" ERROR && return 1
-
-  # 关闭防火墙
-  close_firewall
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ceph env failed!" ERROR && return 1
-
-  # 配置节点名
-  configure_hostname
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ceph env failed!" ERROR && return 1
 
   # 设置linux安全模式
