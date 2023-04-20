@@ -76,6 +76,7 @@ function distribute()
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:boostkit-zk-secure.tar.gz is not exist!" ERROR && return 1
     fi
 
+    pdsh -R ssh -g ex_ceph1 "mkdir -p /home/apache-zookeeper-3.6.3/zookeeper-client/zookeeper-client-c/target/c/"
     if [[ -d "/home/apache-zookeeper-3.6.3/zookeeper-client/zookeeper-client-c/target/c/" ]]; then
         pdcp -r -g ex_ceph1 "/home/apache-zookeeper-3.6.3/zookeeper-client/zookeeper-client-c/target/c/" "/home/apache-zookeeper-3.6.3/zookeeper-client/zookeeper-client-c/target/c/" 
     else
