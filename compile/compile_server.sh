@@ -36,6 +36,7 @@ function server_prepare()
         cd server/adaptorlib
         git clone https://github.com/666syh/ceph-global-cache-adaptor.git
         [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:git clone ceph-global-cache-adaptor failed!" ERROR && return 1
+        cd ceph-global-cache-adaptor.git 
         git checkout T14
         cd ../../../
     fi
