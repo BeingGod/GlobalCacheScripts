@@ -34,12 +34,10 @@ function server_prepare()
         globalcache_log "ceph-global-cache-adaptor does not need to be prepared." INFO
     else
         cd server/adaptorlib
-        # git clone https://github.com/kunpengcompute/ceph-global-cache-adaptor.git
-        wget https://github.com/666syh/ceph-global-cache-adaptor/archive/refs/tags/T14.tar.gz
-        tar -xzvf T14.tar.gz
-        mv ceph-global-cache-adaptor-T14 ceph-global-cache-adaptor
+        git clone https://github.com/666syh/ceph-global-cache-adaptor.git
         [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:git clone ceph-global-cache-adaptor failed!" ERROR && return 1
-        cd ../..
+        git checkout T14
+        cd ../../../
     fi
 
     globalcache_log "------------server prepare end------------" WARN
