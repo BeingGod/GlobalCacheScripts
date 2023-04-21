@@ -24,9 +24,5 @@ cd /home
     [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:compile zookeeper failed!" ERROR && return 1
     compile_client_build # 编译client
     [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:compile client failed!" ERROR && return 1
-    if [ "${cpu_type}" = "aarch64" ] ; then 
-        compile_server_build # 编译server
-        [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:compile server failed!" ERROR && return 1
-    fi
 }
 main

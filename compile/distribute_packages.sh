@@ -34,13 +34,13 @@ function distribute()
 
     cd /home
     if [[ -f "/home/OpenJDK8U-jdk_aarch64_linux_hotspot_jdk8u282-b08.tar.gz" ]];then
-        pdcp -g client,ceph -X ceph1 "/home/OpenJDK8U-jdk_aarch64_linux_hotspot_jdk8u282-b08.tar.gz" "/home"
+        pdcp -g ceph -X ceph1 "/home/OpenJDK8U-jdk_aarch64_linux_hotspot_jdk8u282-b08.tar.gz" "/home"
     else
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:OpenJDK8U-jdk_aarch64_linux_hotspot_jdk8u282-b08.tar.gz not exist!" ERROR && return 1
     fi
 
     if [[ -f "/home/apache-maven-3.6.3-bin.tar.gz" ]]; then
-        pdcp -g client,ceph -X ceph1 "/home/apache-maven-3.6.3-bin.tar.gz" "/home"
+        pdcp -g ceph -X ceph1 "/home/apache-maven-3.6.3-bin.tar.gz" "/home"
     else
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:apache-maven-3.6.3-bin.tar.gz is not exist!" ERROR && return 1
     fi
@@ -51,22 +51,10 @@ function distribute()
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:apache-zookeeper-3.6.3.tar.gz is not exist!" ERROR && return 1
     fi
 
-    if [[ -f "/home/fio-3.26.tar.gz" ]]; then
-        pdcp -g client "/home/fio-3.26.tar.gz" "/home"
-    else
-        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:fio-3.26.tar.gz is not exist!" ERROR && return 1
-    fi
-
     if [[ -f "/home/boostkit-globalcache-release-1.1.0.oe1.aarch64.rpm" ]]; then
         pdcp -g ceph -X ceph1 "/home/boostkit-globalcache-release-1.1.0.oe1.aarch64.rpm" "/home"
     else
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:boostkit-globalcache-release-1.1.0.oe1.aarch64.rpm is not exist!" ERROR && return 1
-    fi
-
-    if [[ -f "/home/boostkit-globalcache-ceph-adaptor-release-1.1.0.oe1.aarch64.rpm" ]]; then
-        pdcp -g client "/home/boostkit-globalcache-ceph-adaptor-release-1.1.0.oe1.aarch64.rpm" "/home"
-    else
-        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:boostkit-globalcache-ceph-adaptor-release-1.1.0.oe1.aarch64.rpm is not exist!" ERROR && return 1
     fi
 
     if [[ -f "/home/boostkit-zk-secure.tar.gz" ]]; then
@@ -77,15 +65,9 @@ function distribute()
 
     pdsh -R ssh -g client,ceph -X ceph1 "mkdir -p /home/apache-zookeeper-3.6.3/zookeeper-client/zookeeper-client-c/target/c/"
     if [[ -d "/home/apache-zookeeper-3.6.3/zookeeper-client/zookeeper-client-c/target/c/" ]]; then
-        pdcp -r -g client,ceph -X ceph1 "/home/apache-zookeeper-3.6.3/zookeeper-client/zookeeper-client-c/target/c/" "/home/apache-zookeeper-3.6.3/zookeeper-client/zookeeper-client-c/target/c/"
+        pdcp -r -g ceph -X ceph1 "/home/apache-zookeeper-3.6.3/zookeeper-client/zookeeper-client-c/target/c/" "/home/apache-zookeeper-3.6.3/zookeeper-client/zookeeper-client-c/target/c/"
     else
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:/home/apache-zookeeper-3.6.3/zookeeper-client/zookeeper-client-c/target/c/ is not exist!" ERROR && return 1
-    fi
-
-    if [[ -f "/home/server/adaptorlib/ceph-global-cache-adaptor/build/lib/libproxy.so" ]]; then
-        pdcp -g client "/home/server/adaptorlib/ceph-global-cache-adaptor/build/lib/libproxy.so" "/home"
-    else
-        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:libproxy.so is not exist!" ERROR && return 1
     fi
 
     if [[ -f "/home/cephlib-release-oe1.tar.gz" ]]; then

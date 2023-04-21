@@ -38,6 +38,12 @@ function client_prepare()
 {
     globalcache_log "------------client prepare start------------" WARN
 
+
+    if [ $(ldd --version | grep "2.33" | wc -l) -eq 1 ]; then
+        # 在glibc 2.33上编译ceph，源码需要patch
+        ceph_need_patch="true"
+    fi
+
     mxml_install
     cd /home
     if [ -f "ceph-14.2.8.tar.bz2" ]; then
@@ -76,12 +82,18 @@ function client_prepare()
         patch -p1 < ceph-global-cache.patch
         patch -p1 < globalcache-ceph-adaptor-spec.patch
         patch -p1 < ceph-global-cache-tls.patch
-
+        
         set +e
         sed -i "s/^set -e/#set -e/g" install-deps.sh
         sh install-deps.sh
         set -e
         sed -i 's#%if 0%{?fedora} || 0%{?rhel}#%if 0%{?fedora} || 0%{?rhel} || 0%{?openEuler}#' ceph.spec.in
+
+        # patch ceph
+        if [ "$ceph_need_patch" == "true" ]; then
+            sed -i "22i\#define HAVE_REENTRANT_STRSIGNAL //" src/global/signal_handler.h
+        fi
+
         cd ..
         tar -cjvf ceph-14.2.8.tar.bz2 ceph-14.2.8
     fi

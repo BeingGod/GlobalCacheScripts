@@ -27,6 +27,10 @@ function server_prepare()
         cd ceph-14.2.8
         patch -p1 < ceph-global-cache-tls.patch
         sed -i "s/-DCMAKE_BUILD_TYPE=Debug/-DCMAKE_BUILD_TYPE=RelWithDebInfo/g" do_cmake.sh
+
+        # patch ceph
+        sed -i "22i\#define HAVE_REENTRANT_STRSIGNAL //" src/global/signal_handler.h
+
         cd ../..
     fi
 
