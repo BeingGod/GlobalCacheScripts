@@ -14,7 +14,6 @@ function configure_profile()
 {
   globalcache_log "------------configure /etc/profile start------------" WARN
 
-
   echo "ulimit -n 524288" >> /etc/profile
   source /etc/profile
 
@@ -89,29 +88,6 @@ priority=1" >> /etc/yum.repos.d/local.repo
   globalcache_log "------------configure mirror repo start------------" WARN
 }
 
-# 安装JDK
-function install_jdk()
-{
-  globalcache_log "------------install jdk end------------" WARN
-
-  cd /home
-  
-  if [ ! -d /usr/local/jdk8u282-b08 ]; then
-    tar -zxvf OpenJDK8U-jdk_aarch64_linux_hotspot_jdk8u282-b08.tar.gz -C /usr/local/
-    [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:extract jdk package failed!" ERROR && return 1
-  fi
-
-  echo "export JAVA_HOME=/usr/local/jdk8u282-b08" >> /etc/profile
-  echo "export PATH=\$\{JAVA_HOME}/bin:\$PATH" >> /etc/profile
-
-  source /etc/profile
-
-  java -version
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install jdk failed!" ERROR && return 1
-
-  globalcache_log "------------install jdk end------------" WARN
-}
-
 function main()
 {
   cd /home
@@ -125,9 +101,6 @@ function main()
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure Global Cache environment failed!" ERROR && return 1
 
   configure_repo
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure Global Cache environment failed!" ERROR && return 1
-
-  install_jdk
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure Global Cache environment failed!" ERROR && return 1
 }
 main
