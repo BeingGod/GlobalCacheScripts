@@ -62,7 +62,7 @@ function distribute_to_client()
     fi
 
     if [[ -f "/home/globalcache-ceph-adaptor-spec.patch" ]]; then
-        pdcp -g client "/home/aglobalcache-ceph-adaptor-spec.patch" "/home"
+        pdcp -g client "/home/globalcache-ceph-adaptor-spec.patch" "/home"
     else
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:globalcache-ceph-adaptor-spec.patch is not exist!" ERROR && return 1
     fi
@@ -104,7 +104,7 @@ function distribute_to_server()
 
     pdsh -g ceph -X ceph1 "mkdir -p /home/oath"
     if [[ -d "/root/rpmbuild/RPMS/" ]]; then
-        pdcp -g ceph "/root/rpmbuild/RPMS/*" "/home/oath" 
+        pdcp -r -g ceph "/root/rpmbuild/RPMS/" "/home/oath"
     else
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:/root/rpmbuild/RPMS/ is not exist!" ERROR && return 1
     fi
@@ -162,14 +162,25 @@ function distribute_to_server()
     globalcache_log "------------distribute packagesto server end------------" WARN
 }
 
+function distribute_to_all() {
+    globalcache_log "------------distribute packages to all start------------" WARN
+
+    SCRIPTS_ROOT="$SCRIPT_HOME/../"
+    pdsh -g all -X ceph1 "mkdir -p $SCRIPTS_ROOT"
+    pdcp -r -g all -X ceph1 "$SCRIPTS_ROOT" "$SCRIPTS_ROOT"
+    pdsh -g all "chmod 777 -R $SCRIPTS_ROOT/data "
+
+    globalcache_log "------------distribute packages to all end------------" WARN
+}
+
 function main()
 {
     configure_pdsh_group
 
+    distribute_to_all
+
     distribute_to_server
-    globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:distribute packages to server nodes failed!" ERROR && return 1
 
     distribute_to_client
-    globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:distribute packages to client nodes failed!" ERROR && return 1
 }
 main
