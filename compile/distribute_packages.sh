@@ -102,6 +102,13 @@ function distribute_to_server()
 {
     globalcache_log "------------distribute packages to server start------------" WARN
 
+    pdsh -g ceph -X ceph1 "mkdir -p /home/oath"
+    if [[ -d "/root/rpmbuild/RPMS/" ]]; then
+        pdcp -g ceph "/root/rpmbuild/RPMS/*" "/home/oath" 
+    else
+        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:/root/rpmbuild/RPMS/ is not exist!" ERROR && return 1
+    fi
+
     cd /home
     if [[ -f "/home/OpenJDK8U-jdk_aarch64_linux_hotspot_jdk8u282-b08.tar.gz" ]];then
         pdcp -g ceph -X ceph1 "/home/OpenJDK8U-jdk_aarch64_linux_hotspot_jdk8u282-b08.tar.gz" "/home"
