@@ -47,6 +47,9 @@ function create_local_source()
     mkdir -p /home/rpm
   fi
 
+  # copy compiled RPMS
+  cp /home/rpmbuild/RPMS/ /home/rpm
+
   cd /home/rpm
   createrepo .
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:create ceph local source failed!" ERROR && return 1
