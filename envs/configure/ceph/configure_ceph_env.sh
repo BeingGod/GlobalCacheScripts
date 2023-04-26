@@ -8,7 +8,6 @@ set -x
 SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../../../common/log.sh
-source $SCRIPT_HOME/compile_pdsh.sh
 
 # 安装compat-openssl包
 function install_compat_openssl()
@@ -45,7 +44,7 @@ function configure_permissive_mode()
     setenforce permissive
     [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure permissive mode failed!" ERROR && return 1
 
-    sed -i 's/SELINUX=enforcing/SELINUX=permissive' /etc/selinux/config
+    sed -i 's#SELINUX=enforcing#SELINUX=permissive#g' /etc/selinux/config
   else
     globalcache_log "------------Linux is already in permissive mode------------" INFO
   fi
