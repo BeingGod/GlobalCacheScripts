@@ -31,21 +31,34 @@ function configure_repo()
 {
   globalcache_log "------------configure mirror repo start------------" WARN
 
-  echo "[local-oath]
+  if [ -f "/etc/yum.repos.d/local.repo" ]; then
+    rm -f /etc/yum.repos.d/local.repo
+  else
+    echo "[local-oath]
 name=local-oath
 baseurl=file:///home/oath
 enabled=1
 gpgcheck=0 
-priority=1" >> /etc/yum.repos.d/local.repo
+priority=1" > /etc/yum.repos.d/local.repo
+  fi
 
-  echo "[arch_fedora_online]
+  if [ -f "/etc/yum.repos.d/fedora.repo" ]; then
+    rm -f /etc/yum.repos.d/fedora.repo 
+  else
+    echo "[arch_fedora_online]
 name=arch_fedora 
 baseurl=https://repo.huaweicloud.com/fedora/releases/34/Everything/aarch64/os/
 enabled=1
 gpgcheck=0 
-priority=2" >> /etc/yum.repos.d/openEuler.repo
+priority=2" > /etc/yum.repos.d/fedora.repo
+  fi
 
-  echo "[Ceph] 
+  local basearch="aarch64"
+
+  if [ -f " /etc/yum.repos.d/ceph.repo" ]; then
+    rm -f /etc/yum.repos.d/openEuler.repo
+  else
+    echo "[Ceph] 
 name=Ceph packages for $basearch 
 baseurl=http://download.ceph.com/rpm-nautilus/el7/$basearch 
 enabled=1 
@@ -71,6 +84,7 @@ gpgcheck=1
 type=rpm-md 
 gpgkey=https://download.ceph.com/keys/release.asc 
 priority=1" > /etc/yum.repos.d/ceph.repo
+  fi
 
   globalcache_log "------------configure mirror repo end------------" WARN
 }
@@ -111,19 +125,21 @@ function compile_openSSL()
 
   dnf install -y wget
 
-  if [ ! -f openssl-1.1.1k.tar.gz ]; then
-    wget https://www.openssl.org/source/old/1.1.1/openssl-1.1.1k.tar.gz --no-check-certificate
-    [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:download openSSL source code failed!" ERROR && return 1
+  if [ ! -d "/usr/local/ssl" ]; then
+    if [ ! -f openssl-1.1.1k.tar.gz ]; then
+      wget https://www.openssl.org/source/old/1.1.1/openssl-1.1.1k.tar.gz --no-check-certificate
+      [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:download openSSL source code failed!" ERROR && return 1
+    fi
+
+    tar -zxvf openssl-1.1.1k.tar.gz
+
+    cd openssl-1.1.1k
+    ./config --prefix=/usr/local/ssl
+    make -j
+    make install
+  else
+    globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:openSSL already installed!" WARN && return 0 
   fi
-
-  tar -zxvf openssl-1.1.1k.tar.gz
-
-  cd openssl-1.1.1k
-  ./config --prefix=/usr/local/ssl
-  make -j4
-  make install
-
-  popd
 
   globalcache_log "------------compile openSSL end------------" WARN
 }
