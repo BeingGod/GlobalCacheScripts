@@ -46,14 +46,14 @@ function partition()
   globalcache_log "------------partition start------------" WARN
 
   local nvme_list=$(cat /home/disklist.txt | grep -E -oe "nvme([0-9]*)n([0-9]*)")
-  local nvme_num=$(echo $nvme_list | wc -l)
+  local nvme_num=$(cat /home/disklist.txt | grep -E -oe "nvme([0-9]*)n([0-9]*)" | wc -l)
   for nvme in $nvme_list
   do
     parted -s /dev/$nvme mklabel gpt
   done
   
   local data_disk_list=$(cat /home/disklist.txt | grep -E -oe "sd[a-z]")
-  local data_disk_num=$(echo $data_disk_list | wc -l)
+  local data_disk_num=$(cat /home/disklist.txt | grep -E -oe "sd[a-z]" | wc -l)
   local part_per_nvme=$(expr $data_disk_num / $nvme_num)
   local start=4
   for i in $(seq 1 $part_per_nvme)
@@ -73,12 +73,12 @@ function partition()
     local start=$end
   done
 
-  local ccm_part_num=`expr $part_per_nvme * 2 + 1`
+  local ccm_part_num=`expr $part_per_nvme \* 2 + 1`
 
   for nvme in $nvme_list
   do
     parted /dev/$nvme mkpart primary ${end}MiB 100%
-    sed -i "s/<device>/${nvme}p${ccm_part_num}" /home/nodelists.txt
+    sed -i "s#<device>#${nvme}p${ccm_part_num}#" /home/nodelist.txt
   done
 
   for data_disk in $data_disk_list
