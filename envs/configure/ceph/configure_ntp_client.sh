@@ -26,12 +26,6 @@ function configure_ntp_client()
   local server_ip=$(cat /home/script.conf | grep ntp_server | cut -d ' ' -f 2)
   echo "server $server_ip" > /etc/ntp.conf
 
-  # 判断ntpd服务是否开启
-  if [[ $(systemctl status ntpd | grep inactive | wc -l) -eq 1 ]]; then
-    systemctl start ntpd 
-    systemctl enable ntpd 
-  fi
-
   # 同步时间
   ntpdate $server_ip 
   hwclock -w
