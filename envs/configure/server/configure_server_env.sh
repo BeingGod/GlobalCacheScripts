@@ -154,8 +154,14 @@ function create_openSSL_link()
 {
   globalcache_log "------------create openSSL link start------------" WARN
 
-  echo y | mv /usr/bin/openssl /usr/bin/openssl.bak
-  echo y | mv /usr/include/openssl /usr/include/openssl.bak
+  if [ -f "/usr/bin/openssl" ]; then
+    echo y | mv /usr/bin/openssl /usr/bin/openssl.bak
+  fi
+
+  if [ -d "/usr/include/openssl" ]; then
+    echo y | mv /usr/include/openssl /usr/include/openssl.bak
+  fi
+  
   ln -s /usr/local/ssl/bin/openssl /usr/bin/openssl
   ln -s /usr/local/ssl/include/openssl /usr/include/openssl
   echo "/usr/local/ssl/lib" >> /etc/ld.so.conf 
