@@ -9,6 +9,16 @@ SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../../../common/log.sh
 
+# 安装依赖
+function install_dependency_packages()
+{
+  globalcache_log "------------install denpendency packages start------------" WARN
+
+  yum install createrepo -y
+
+  globalcache_log "------------install denpendency packages end------------" WARN
+}
+
 # 配置oath本地镜像
 function create_oath_local_source() 
 {
@@ -172,6 +182,8 @@ function main()
 {
   globalcache_log "------------configure Global Cache environment start------------" WARN
 
+  install_dependency_packages
+  
   create_oath_local_source
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure Global Cache environment failed!" ERROR && return 1
   
