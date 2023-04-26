@@ -48,7 +48,7 @@ function create_local_source()
   fi
 
   # copy compiled RPMS
-  cp /home/rpmbuild/RPMS/ /home/rpm
+  cp -r /home/rpmbuild/RPMS/* /home/rpm
 
   cd /home/rpm
   createrepo .
@@ -70,20 +70,9 @@ function configure_repo()
 {
   globalcache_log "------------configure mirror repo start------------" WARN
 
-  if [ ! -f /etc/yum.repos.d/local.repo ]; then
-    touch /etc/yum.repos.d/local.repo
-  fi
-  
   echo "[local]
 name=local
 baseurl=file:///home/rpm
-enabled=1
-gpgcheck=0
-priority=1
-
-[local-oath]
-name=local-oath
-baseurl=file:///home/oath
 enabled=1
 gpgcheck=0
 priority=1" >> /etc/yum.repos.d/local.repo
