@@ -114,12 +114,7 @@ function install_jdk()
   fi
 
   echo "export JAVA_HOME=/usr/local/jdk8u282-b08" >> /etc/profile
-  echo "export PATH=\$\{JAVA_HOME}/bin:\$PATH" >> /etc/profile
-
-  source /etc/profile
-
-  java -version
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install jdk failed!" ERROR && return 1
+  echo "export PATH=\${JAVA_HOME}/bin:\$PATH" >> /etc/profile
 
   globalcache_log "------------install jdk end------------" WARN
 }
