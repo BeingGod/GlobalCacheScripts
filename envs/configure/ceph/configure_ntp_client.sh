@@ -27,7 +27,7 @@ function configure_ntp_client()
   echo "server $server_ip" > /etc/ntp.conf
 
   # 判断ntpd服务是否开启
-  if [[ $(systemctl status ntpd | grep active | wc -l) -ne 1 ]]; then
+  if [[ $(systemctl status ntpd | grep inactive | wc -l) -eq 1 ]]; then
     systemctl start ntpd 
     systemctl enable ntpd 
   fi
@@ -39,7 +39,7 @@ function configure_ntp_client()
   # 安装crontab定时服务
   yum install -y crontabs
 
-  if [[ $(systemctl status crond | grep active | wc -l 1) -ne 1 ]]; then
+  if [[ $(systemctl status crond | grep inactive | wc -l 1) -eq 1 ]]; then
     systemctl enable crond.service
     systemctl start crond 
   fi

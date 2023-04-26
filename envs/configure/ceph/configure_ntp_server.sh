@@ -34,11 +34,10 @@ restrict ::1
 restrict $server_ip mask $mask
 server 127.127.1.0
 fudge 127.127.1.0
-stratum 8"
-  cat $SCRIPT_HOME/server_ntp.conf > /etc/ntp.conf
+stratum 8" > /etc/ntp.conf
 
   # 判断ntpd服务是否开启
-  if [[ $(systemctl status ntpd | grep active | wc -l) -ne 1 ]]; then
+  if [[ $(systemctl status ntpd | grep inactive | wc -l) -eq 1 ]]; then
     systemctl start ntpd 
     systemctl enable ntpd 
   fi
