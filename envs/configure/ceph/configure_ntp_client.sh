@@ -33,7 +33,7 @@ function configure_ntp_client()
   fi
 
   # 同步时间
-  ntpdate ceph1
+  ntpdate $server_ip 
   hwclock -w
 
   # 安装crontab定时服务
