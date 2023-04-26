@@ -33,7 +33,7 @@ function configure_ntp_client()
   # 安装crontab定时服务
   yum install -y crontabs
 
-  if [[ $(systemctl status crond | grep inactive | wc -l 1) -eq 1 ]]; then
+  if [[ $(systemctl status crond | grep -oe "active" | wc -l) -eq 1 ]]; then
     systemctl enable crond.service
     systemctl start crond 
   fi
