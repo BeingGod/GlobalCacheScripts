@@ -66,7 +66,7 @@ priority=2" > /etc/yum.repos.d/fedora.repo
   local basearch="aarch64"
 
   if [ -f " /etc/yum.repos.d/ceph.repo" ]; then
-    rm -f /etc/yum.repos.d/openEuler.repo
+    rm -f /etc/yum.repos.d/ceph.repo
   else
     echo "[Ceph] 
 name=Ceph packages for $basearch 
@@ -117,66 +117,6 @@ function install_jdk()
   echo "export PATH=\${JAVA_HOME}/bin:\$PATH" >> /etc/profile
 
   globalcache_log "------------install jdk end------------" WARN
-}
-
-# 编译并安装openSSL
-function compile_openSSL()
-{
-  globalcache_log "------------compile openSSL start------------" WARN
-
-  cd /usr/local
-
-  yum install net-tools expect haveged dos2unix -y
-
-  dnf install -y wget
-
-  if [ ! -d "/usr/local/ssl" ]; then
-    if [ ! -f openssl-1.1.1k.tar.gz ]; then
-      wget https://www.openssl.org/source/old/1.1.1/openssl-1.1.1k.tar.gz --no-check-certificate
-      [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:download openSSL source code failed!" ERROR && return 1
-    fi
-
-    tar -zxvf openssl-1.1.1k.tar.gz
-
-    cd openssl-1.1.1k
-    ./config --prefix=/usr/local/ssl
-    make -j
-    make install
-  else
-    globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:openSSL already installed!" WARN && return 0 
-  fi
-
-  globalcache_log "------------compile openSSL end------------" WARN
-}
-
-# 创建openSSL软连接
-function create_openSSL_link()
-{
-  globalcache_log "------------create openSSL link start------------" WARN
-
-  if [ -f "/usr/bin/openssl" ]; then
-    echo y | mv /usr/bin/openssl /usr/bin/openssl.bak
-  fi
-
-  if [ -d "/usr/include/openssl" ]; then
-    echo y | mv /usr/include/openssl /usr/include/openssl.bak
-  fi
-  
-  ln -s /usr/local/ssl/bin/openssl /usr/bin/openssl
-  ln -s /usr/local/ssl/include/openssl /usr/include/openssl
-  echo "/usr/local/ssl/lib" >> /etc/ld.so.conf 
-  ldconfig -v
-
-  globalcache_log "------------create openSSL link failed------------" WARN
-}
-
-function install_sysstat()
-{
-  globalcache_log "------------install sysstat start------------" WARN
-
-  yum install sysstat  -y
-
-  globalcache_log "------------install sysstat end------------" WARN
 }
 
 function main()
