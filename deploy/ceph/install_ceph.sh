@@ -35,7 +35,7 @@ function install_ceph_deploy_tools()
 
   pip install ceph-deploy
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install python package failed!" ERROR && return 1
-  echo "y" | cp $SCRIPT_HOME/__init__.py /lib/python2.7/s
+  echo "y" | cp $SCRIPT_HOME/__init__.py /lib/python2.7/site-packages/ceph_deploy/hosts/
 
   globalcache_log "------------install ceph deploy tools end------------" WARN
 }

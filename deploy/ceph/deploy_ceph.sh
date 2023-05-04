@@ -16,36 +16,28 @@ function deploy_mon()
 
   cd /etc/ceph
 
-  local members=""
-  for ceph in $(cat /home/hostnamelist.txt | grep -E -oe "ceph[0-9]*")
+  members=""
+  while read line
   do
-    members="$members $ceph"
-  done
-  
-  ceph-deploy new $members
+    if [ $(echo $line | grep -E -oe "ceph[0-9]*" | wc -l) -eq 1 ]; then
+        members="$members $(echo $line | grep -E -oe "ceph[0-9]*")"
+    fi
+  done < /home/hostnamelist.txt
+
+  ceph-deploy --overwrite-conf new $members
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:deploy new members failed!" ERROR && return 1
 
-  local members=""
-  local hosts=""
-  for line in $(cat /home/hostnamelist.txt | grep -E "ceph[0-9]*")
+  members=""
+  hosts=""
+  while read line
   do
-    members="$members,$(echo $line | cut -d ' ' -f 2)"
-    hosts="$hosts,$(echo $line | cut -d ' ' -f 1)"
-  done
+    if [ $(echo $line | grep -E -oe "ceph[0-9]*" | wc -l) -eq 1 ]; then
+        members="$(echo $line | cut -d ' ' -f 2),$members"
+        hosts="$(echo $line | cut -d ' ' -f 1),$hosts"
+    fi
+  done < /home/hostnamelist.txt
 
-  if [ -f "/etc/ceph/ceph.conf" ]; then
-    rm -rf /etc/ceph/ceph.conf
-  fi
-
-  echo "[global]
-fsid = $uuidgen
-mon_initial_members = $members
-mon_host = $hosts
-auth_cluster_required = cephx
-auth_service_required = cephx
-auth_client_required = cephx
-
-public_network = $(cat /home/script.conf | grep public_network | cut -d ' ' -f 2)
+  echo "public_network = $(cat /home/script.conf | grep public_network | cut -d ' ' -f 2)
 cluster_network =  $(cat /home/script.conf | grep public_network | cut -d ' ' -f 2)
 
 bluestore_prefer_deferred_size_hdd = 0
@@ -53,12 +45,12 @@ rbd_op_threads=16 # rbd tp线程数
 osd_memory_target = 2147483648 # 限制osd内存的参数
 bluestore_default_buffered_read = false # 当读取完成时，根据标记决定是否缓存
 [mon]
-mon_allow_pool_delete = true" > /etc/ceph/ceph.conf
+mon_allow_pool_delete = true" >> /etc/ceph/ceph.conf
 
-  ceph-deploy mon create-initial 
+  ceph-deploy --overwrite-conf mon create-initial
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:init deploy mon failed!" ERROR && return 1
 
-  local nodes=""
+  nodes=""
   for node in $(cat /home/hostnamelist.txt | grep -E -oe "(ceph[0-9]*)|(client[0-9]*)")
   do
     nodes="$nodes $node"
@@ -85,7 +77,7 @@ function deploy_mgr()
     members="$members $ceph"
   done
   
-  ceph-deploy mgr create new $members
+  ceph-deploy mgr create $members
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:deploy mgr failed!" ERROR && return 1
 
   ceph -s
@@ -101,13 +93,14 @@ function deploy_osd()
   cd /etc/ceph
 
   local ceph=$(cat /home/hostnamelist.txt | grep -E -oe "ceph[0-9]*")
-  local nvme_list=$(cat /home/disklist.txt | grep -E -oe "nvme([0-9]*)n([0-9]*)")
-  local nvme_num=$(cat /home/disklist.txt | grep -E -oe "nvme([0-9]*)n([0-9]*)" | wc -l)
-  local data_disk_list=($(cat /home/disklist.txt | grep -E -oe "sd[a-z]"))
-  local data_disk_num=$(cat /home/disklist.txt | grep -E -oe "sd[a-z]" | wc -l)
-  local part_per_nvme=$(expr $data_disk_num / $nvme_num)
   for node in $ceph
   do
+    local nvme_list=$(cat /home/disklist_${node}.txt | grep -E -oe "nvme([0-9]*)n([0-9]*)")
+    local nvme_num=$(cat /home/disklist_${node}.txt | grep -E -oe "nvme([0-9]*)n([0-9]*)" | wc -l)
+    local data_disk_list=($(cat /home/disklist_${node}.txt | grep -E -oe "sd[a-z]"))
+    local data_disk_num=$(cat /home/disklist_${node}.txt | grep -E -oe "sd[a-z]" | wc -l)
+    local part_per_nvme=$(expr $data_disk_num / $nvme_num)
+
     local start=0
     local end=$(expr $part_per_nvme - 1)
     for nvme in $nvme_list
@@ -116,7 +109,7 @@ function deploy_osd()
       local k=2
       for index in $(seq $start $end)
       do
-        ceph-deploy osd create ${node} --data '/dev/${data_disk_list[${index}]}' --block-wal '/dev/${nvme}p${j}' --block-db '/dev/${nvme}p${k}'
+        ceph-deploy osd create ${node} --data "/dev/${data_disk_list[${index}]}" --block-wal "/dev/${nvme}p${j}" --block-db "/dev/${nvme}p${k}"
         [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:deploy osd failed!" ERROR && return 1
         ((j=${j}+2))
         ((k=${k}+2))
