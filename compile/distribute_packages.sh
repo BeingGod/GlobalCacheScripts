@@ -160,7 +160,7 @@ function distribute_to_server()
     fi
 
     if [[ -f "/home/globalcache-adaptorlib-release-oe1.tar.gz" ]]; then
-        pdcp -g ceph -X ceph1 "/home/cephlib-release-oe1.tar.gz" "/home"
+        pdcp -g ceph -X ceph1 "/home/globalcache-adaptorlib-release-oe1.tar.gz" "/home"
     else
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:globalcache-adaptorlib-release-oe1.tar.gz is not exist!" ERROR && return 1
     fi
