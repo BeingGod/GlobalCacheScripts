@@ -122,6 +122,12 @@ function distribute_to_server()
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:apache-maven-3.6.3-bin.tar.gz is not exist!" ERROR && return 1
     fi
 
+    if [[ -f "/home/apache-zookeeper-3.6.3-bin.tar.gz" ]]; then
+        pdcp -g ceph -X ceph1 "/home/apache-zookeeper-3.6.3-bin.tar.gz" "/home"
+    else
+        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:apache-zookeeper-3.6.3-bin.tar.gz is not exist!" ERROR && return 1
+    fi
+
     if [[ -f "/home/apache-zookeeper-3.6.3.tar.gz" ]]; then
         pdcp -g ceph -X ceph1 "/home/apache-zookeeper-3.6.3.tar.gz" "/home"
     else
