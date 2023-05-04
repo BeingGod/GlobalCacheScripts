@@ -119,6 +119,48 @@ function install_jdk()
   globalcache_log "------------install jdk end------------" WARN
 }
 
+
+# 编译并安装openSSL
+function install_openssl()
+{
+  globalcache_log "------------compile openSSL start------------" WARN
+
+  cd /usr/local
+
+  yum install net-tools expect haveged dos2unix -y
+
+  dnf install -y wget
+
+  if [ ! -d "/usr/local/ssl" ]; then
+    if [ ! -f openssl-1.1.1n.tar.gz ]; then
+      wget https://www.openssl.org/source/old/1.1.1/openssl-1.1.1n.tar.gz --no-check-certificate
+      [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:download openSSL source code failed!" ERROR && return 1
+    fi
+
+    tar -zxvf openssl-1.1.1n.tar.gz
+
+    cd openssl-1.1.1n
+    ./config --prefix=/usr/local/ssl
+    make -j
+    make install
+  else
+    globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:openSSL already installed!" WARN && return 0 
+  fi
+
+  if [ -f "/usr/bin/openssl" ]; then
+    echo y | mv /usr/bin/openssl /usr/bin/openssl.bak
+  fi
+
+  if [ -d "/usr/include/openssl" ]; then
+    echo y | mv /usr/include/openssl /usr/include/openssl.bak
+  fi
+
+  ln -s /usr/local/ssl/bin/openssl /usr/bin/openssl
+  ln -s /usr/local/ssl/include/openssl /usr/include/openssl
+
+  globalcache_log "------------compile openSSL end------------" WARN
+}
+
 function main()
 {
   globalcache_log "------------configure Global Cache environment start------------" WARN
@@ -132,6 +174,9 @@ function main()
   yum clean all -y && yum makecache -y
 
   install_jdk
+  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure Global Cache environment failed!" ERROR && return 1
+
+  install_openssl  
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure Global Cache environment failed!" ERROR && return 1
 
   install_sysstat
