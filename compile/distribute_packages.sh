@@ -102,6 +102,9 @@ function distribute_to_server()
 {
     globalcache_log "------------distribute packages to server start------------" WARN
 
+    SCRIPTS_ROOT="$SCRIPT_HOME/../"
+    pdsh -g all "chmod 777 -R $SCRIPTS_ROOT/data "
+
     pdsh -g ceph -X ceph1 "mkdir -p /home/oath"
     if [[ -d "/root/rpmbuild/RPMS/" ]]; then
         pdcp -r -g ceph "/root/rpmbuild/RPMS/" "/home/oath"
@@ -168,24 +171,11 @@ function distribute_to_server()
     globalcache_log "------------distribute packagesto server end------------" WARN
 }
 
-function distribute_to_all() {
-    globalcache_log "------------distribute packages to all start------------" WARN
-
-    SCRIPTS_ROOT="$SCRIPT_HOME/../"
-    pdsh -g all -X ceph1 "mkdir -p $SCRIPTS_ROOT"
-    pdcp -r -g all -X ceph1 "$SCRIPTS_ROOT" "$SCRIPTS_ROOT"
-    pdsh -g all "chmod 777 -R $SCRIPTS_ROOT/data "
-
-    globalcache_log "------------distribute packages to all end------------" WARN
-}
-
 function main()
 {
     configure_pdsh_group
 
-    distribute_to_all
-
-    distribute_to_server
+     distribute_to_server
 
     distribute_to_client
 }
