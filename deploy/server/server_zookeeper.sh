@@ -5,7 +5,7 @@
 # Author: xc
 # Create: 2022-04-01
 #-----------------------------------------------------------------------------------
-set -x
+
 SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../../common/log.sh
@@ -93,7 +93,7 @@ function zookeeper_service()
     set +e
     kill -9 $(ps -ef |grep zookeeper |awk '{print $2}')
     service zookeeper restart
-    set -x
+    
 
     chkconfig --add zookeeper
 
