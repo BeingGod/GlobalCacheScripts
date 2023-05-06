@@ -6,7 +6,9 @@
 # Create: 2022-04-01
 #-----------------------------------------------------------------------------------
 
-source ../../common/log.sh
+SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
+LOG_FILE=/var/log/globalcache_script.log
+source $SCRIPT_HOME/../../common/log.sh
 
 # 安装zookeeper
 function client_zookeeper_install()
