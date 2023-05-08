@@ -55,6 +55,12 @@ function distribute_to_client()
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:ceph-14.2.8.tar.gz is not exist!" ERROR && return 1
     fi
 
+    if [[ -f "/home/ceph-global-cache.patch" ]]; then
+        pdcp -g client "/home/ceph-global-cache.patch" "/home"
+    else
+        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:ceph-global-cache.patch is not exist!" ERROR && return 1
+    fi
+
     if [[ -f "/home/ceph-global-cache-tls.patch" ]]; then
         pdcp -g client "/home/ceph-global-cache-tls.patch" "/home"
     else
