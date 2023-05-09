@@ -56,9 +56,9 @@ function globalcache_install()
     else
         echo "user globalcacheop does not exist"
         echo "adding globalcachep, password is $globalcacheop_passwd"
-
-        useradd -p $(openssl passwd -1 $GLOBALCACHEOP_PWD) globalcacheop
-        usermod -a -G systemd-journal globalcacheop
+        
+        useradd -p $(openssl passwd -1 $GLOBALCACHEOP_PWD) -g globalcache -s /bin/bash globalcacheop
+        usermod -a -G systemd-journal globalcache
 
         echo "globalcacheop ALL=(root) /usr/bin/systemctl start ccm" >> /etc/sudoers
         echo "globalcacheop ALL=(root) /usr/bin/systemctl stop ccm" >> /etc/sudoers
@@ -71,8 +71,7 @@ function globalcache_install()
         echo "globalcacheop ALL=(root) /usr/bin/systemctl status GlobalCache.target" >> /etc/sudoers
     fi
 
-    chown -R globalcacheop:globalcacheop $SCRIPT_HOME/../../data
-    chmod 755 $SCRIPT_HOME/../../data
+    chmod 777 $SCRIPT_HOME/../../data
 
     globalcache_log "------------globalcache install end------------" WARN
 }
