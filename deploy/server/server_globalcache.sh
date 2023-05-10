@@ -53,23 +53,23 @@ function globalcache_install()
     # 添加运维用户
     if id -u globalcacheop >/dev/null 2>&1; then
         echo "user globalcacheop exists"
-    else
-        echo "user globalcacheop does not exist"
-        echo "adding globalcachep, password is $globalcacheop_passwd"
-        
-        useradd -p $(openssl passwd -1 $GLOBALCACHEOP_PWD) -g globalcache -s /bin/bash globalcacheop
-        usermod -a -G systemd-journal globalcache
-
-        echo "globalcacheop ALL=(root) /usr/bin/systemctl start ccm" >> /etc/sudoers
-        echo "globalcacheop ALL=(root) /usr/bin/systemctl stop ccm" >> /etc/sudoers
-        echo "globalcacheop ALL=(root) /usr/bin/systemctl status ccm" >> /etc/sudoers
-        echo "globalcacheop ALL=(root) /usr/bin/systemctl start" >> /etc/sudoers
-        echo "globalcacheop ALL=(root) /usr/bin/systemctl stop" >> /etc/sudoers
-        echo "globalcacheop ALL=(root) /usr/bin/systemctl status" >> /etc/sudoers
-        echo "globalcacheop ALL=(root) /usr/bin/systemctl start GlobalCache.target" >> /etc/sudoers
-        echo "globalcacheop ALL=(root) /usr/bin/systemctl stop GlobalCache.target" >> /etc/sudoers
-        echo "globalcacheop ALL=(root) /usr/bin/systemctl status GlobalCache.target" >> /etc/sudoers
+        userdel -r globalcacheop
     fi
+
+    echo "adding globalcachep, password is $globalcacheop_passwd"
+    
+    useradd -p $(openssl passwd -1 $GLOBALCACHEOP_PWD) -g globalcache -s /bin/bash globalcacheop
+    usermod -a -G systemd-journal globalcache
+
+    echo "globalcacheop ALL=(root) /usr/bin/systemctl start ccm" >> /etc/sudoers
+    echo "globalcacheop ALL=(root) /usr/bin/systemctl stop ccm" >> /etc/sudoers
+    echo "globalcacheop ALL=(root) /usr/bin/systemctl status ccm" >> /etc/sudoers
+    echo "globalcacheop ALL=(root) /usr/bin/systemctl start" >> /etc/sudoers
+    echo "globalcacheop ALL=(root) /usr/bin/systemctl stop" >> /etc/sudoers
+    echo "globalcacheop ALL=(root) /usr/bin/systemctl status" >> /etc/sudoers
+    echo "globalcacheop ALL=(root) /usr/bin/systemctl start GlobalCache.target" >> /etc/sudoers
+    echo "globalcacheop ALL=(root) /usr/bin/systemctl stop GlobalCache.target" >> /etc/sudoers
+    echo "globalcacheop ALL=(root) /usr/bin/systemctl status GlobalCache.target" >> /etc/sudoers
 
     chmod 777 $SCRIPT_HOME/../../data
 
