@@ -20,8 +20,11 @@ function conf_check()
     globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:script.conf not exits,please check your configuration file" FATAL
   fi
 
-  if [ $(ls /home | grep -x "disklist.txt" | wc -l) -ne 1 ]; then
-    globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:disklist.txt not exits,please check your configuration file" FATAL
+  realhostname=$(hostname)
+  if [ $(echo $realhostname | grep "ceph" | wc -l) -eq 1 ]; then
+    if [ $(ls /home | grep -x "disklist.txt" | wc -l) -ne 1 ]; then
+      globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:disklist.txt not exits,please check your configuration file" FATAL
+    fi
   fi
 
   if [ $(ls /home | grep -x "hostnamelist.txt" | wc -l) -ne 1 ]; then
