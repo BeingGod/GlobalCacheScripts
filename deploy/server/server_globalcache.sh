@@ -259,6 +259,7 @@ function server_globalcache_check()
     globalcache_log "------------server globalcache check start------------" WARN
 
     systemctl status globalcache.service
+    [[ $? -ne 0 && $? -ne 3 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:check gcache server failed!" FATAL
 
     globalcache_log "------------server globalcache check end------------" WARN
 }

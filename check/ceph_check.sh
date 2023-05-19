@@ -5,15 +5,25 @@
 # Create: 2023-03-19
 #-----------------------------------------------------------------------------------
 SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
-LOG_FILE=$SCRIPT_HOME/../../log/globalcache_script.log
-source $SCRIPT_HOME/../../common/log.sh
+LOG_FILE=/var/log/globalcache_script.log
+source $SCRIPT_HOME/../common/log.sh
 
-function main()
+function ceph_check()
 {
+    globalcache_log "------------check ceph start------------" WARN
+
     if ceph -s > /dev/null 2>&1; then
         ceph -s
     else
-        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:ceph is not deployed!" ERROR && return 1
+        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:check ceph failed!" FATAL
     fi
+
+    globalcache_log "------------check ceph start------------" WARN
+}
+
+function main()
+{
+cd /home
+    ceph_check
 }
 main

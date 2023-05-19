@@ -103,7 +103,7 @@ function compile_liboath_check()
     if [ "$liboath_uncompiled" == "true" ]; then
         globalcache_log "Liboath need compile" WARN
     else
-        globalcache_log "Liboath has been compiled." WARN
+        globalcache_log "Liboath has been compiled." FATAL
     fi
     globalcache_log "------------liboath compile check end------------" WARN
 }

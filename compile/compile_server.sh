@@ -62,7 +62,7 @@ function cephlib_compile_check()
     fi
 
     if [ "$cephlib_uncompiled" == "true" ]; then
-        globalcache_log "cephlib need compile." INFO
+        globalcache_log "cephlib need compile." FATAL 
     else
         globalcache_log "cephlib has been compiled." INFO
     fi
@@ -107,7 +107,7 @@ function globalcache_adaptor_compile_check()
     fi
 
     if [ "$globalcache_adaptor_uncompiled" == "true" ]; then
-        globalcache_log "globalcache_adaptor need to compile." WARN
+        globalcache_log "globalcache_adaptor need to compile." FATAL 
     else
         globalcache_log "globalcache_adaptor has been compiled." WARN
     fi
@@ -131,7 +131,7 @@ function globalcache_adaptor_compile()
         cp globalcache-adaptorlib-release-oe1.tar.gz ../../../..
         cd ../../../..
     else
-        globalcache_log "globalcache_adaptor does not need to be compiled." WARN
+        globalcache_log "globalcache_adaptor does not need to be compiled." FATAL 
     fi
 
     globalcache_log "------------globalcache_adaptor compile end------------" WARN

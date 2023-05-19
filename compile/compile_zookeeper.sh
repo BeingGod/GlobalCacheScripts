@@ -76,55 +76,6 @@ function zookeeper_compile()
     globalcache_log "------------zookeeper compile end------------" WARN
 }
 
-# 检查zookeeper
-function compile_zookeeper_check()
-{
-    globalcache_log "------------zookeeper check start------------" WARN
-    cd /home
-    if [ -f "apache-zookeeper-3.6.3.tar.gz" ]; then
-        globalcache_log "Apache-zookeeper-3.6.3.tar.gz exists." INFO
-    else
-        globalcache_log "Apache-zookeeper-3.6.3.tar.gz does not exist." WARN
-        globalcache_log "Please upload apache-zookeeper-3.6.3.tar.gz to /home." WARN
-    fi
-
-    if [ ! -d "/usr/local/jdk8u282-b08" ]; then
-        globalcache_log "The /usr/local/jdk8u282-b08 does not exist." WARN
-        globalcache_log "Please check jdk8u282-b08." WARN
-    fi
-
-    if [ ! -d "/usr/local/apache-maven-3.6.3" ]; then
-        globalcache_log "The /usr/local/apache-maven-3.6.3 does not exist." WARN
-        globalcache_log "Please check apache-maven-3.6.3." WARN
-    fi
-
-    if [ -d "/home/apache-zookeeper-3.6.3" ]; then
-        globalcache_log "The apache-zookeeper-3.6.3 already exists." INFO
-
-        if [ -d "/home/apache-zookeeper-3.6.3/zookeeper-jute/target" ]; then
-            globalcache_log "The zookeeper-jute has been compiled." WARN
-        else
-            globalcache_log "The zookeeper-jute need to compile." WARN
-        fi
-
-        if [ -d "/home/apache-zookeeper-3.6.3/zookeeper-client/zookeeper-client-c/target" ]; then
-            globalcache_log "The zookeeper-c has been compiled." WARN
-        else
-            globalcache_log "The zookeeper-c need to compile." WARN
-        fi
-
-        if [ -d "/home/apache-zookeeper-3.6.3/zookeeper-server/target" ]; then
-            globalcache_log "The zookeeper-server has been compiled." WARN
-        else
-            globalcache_log "The zookeeper-server need to compile." WARN
-        fi
-    else
-        globalcache_log "The apache-zookeeper-3.6.3 does not exist." WARN
-    fi
-
-    globalcache_log "------------zookeeper check end------------" WARN
-}
-
 # 构建zookeeper
 function compile_zookeeper_build()
 {

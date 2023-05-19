@@ -121,16 +121,6 @@ function server_zookeeper_install()
     globalcache_log "------------install server zookeeper end------------" WARN
 }
 
-# 检查zookeeper
-function server_zookeeper_check()
-{
-    globalcache_log "------------server zookeeper check start------------" WARN
-
-    service zookeeper status
-
-    globalcache_log "------------server zookeeper check end------------" WARN
-}
-
 # 删除zookeeper头文件
 function server_zookeeper_include_uninstall()
 {

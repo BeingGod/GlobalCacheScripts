@@ -14,6 +14,7 @@ function globalcache_log()
     else
         log_level="error"
     fi
+    
     if [[ "$log_level" = "info" || "$log_level" = "INFO" ]];then
         echo "[$(date "+%Y-%m-%d %T")][$log_level]$1" >> ${LOG_FILE}
     else
