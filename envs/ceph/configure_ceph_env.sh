@@ -52,15 +52,73 @@ function configure_permissive_mode()
   globalcache_log "------------configure permissive mode end------------" WARN
 }
 
+# 配置镜像仓库
+function configure_repo()
+{
+  globalcache_log "------------configure mirror repo start------------" WARN
+
+  if [ -f "/etc/yum.repos.d/local.repo" ]; then
+    rm -f /etc/yum.repos.d/local.repo
+  else
+    echo "[local-oath]
+name=local-oath
+baseurl=file:///home/oath
+enabled=1
+gpgcheck=0 
+priority=1" > /etc/yum.repos.d/local.repo
+  fi
+
+  if [ -f "/etc/yum.repos.d/fedora.repo" ]; then
+    rm -f /etc/yum.repos.d/fedora.repo 
+  else
+    echo "[arch_fedora_online]
+name=arch_fedora 
+baseurl=https://repo.huaweicloud.com/fedora/releases/34/Everything/aarch64/os/
+enabled=1
+gpgcheck=0 
+priority=2" > /etc/yum.repos.d/fedora.repo
+  fi
+
+  local basearch="aarch64"
+
+  if [ -f " /etc/yum.repos.d/ceph.repo" ]; then
+    rm -f /etc/yum.repos.d/ceph.repo
+  else
+    echo "[Ceph] 
+name=Ceph packages for $basearch 
+baseurl=http://download.ceph.com/rpm-nautilus/el7/$basearch 
+enabled=1 
+gpgcheck=1 
+type=rpm-md 
+gpgkey=https://download.ceph.com/keys/release.asc 
+priority=1 
+
+[Ceph-noarch] 
+name=Ceph noarch packages 
+baseurl=http://download.ceph.com/rpm-nautilus/el7/noarch 
+enabled=1 
+gpgcheck=1 
+type=rpm-md 
+gpgkey=https://download.ceph.com/keys/release.asc 
+priority=1 
+
+[ceph-source] 
+name=Ceph source packages 
+baseurl=http://download.ceph.com/rpm-nautilus/el7/SRPMS 
+enabled=1 
+gpgcheck=1 
+type=rpm-md 
+gpgkey=https://download.ceph.com/keys/release.asc 
+priority=1" > /etc/yum.repos.d/ceph.repo
+  fi
+
+  globalcache_log "------------configure mirror repo end------------" WARN
+}
 
 function main()
 {
-  # 判断配置文件是否存在
-  if [ ! -f "/home/script.conf" ]; then
-    globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:Please generate configure file first!" WARN
-    [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ceph env failed!" ERROR && return 1
-  fi
-
+  configure_repo
+  
   local hostname=$(cat /home/script.conf | grep "hostname" | cut -d " " -f 2)
 
   # 安装compat-openssl
