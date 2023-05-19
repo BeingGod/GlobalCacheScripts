@@ -18,7 +18,7 @@ cpu_type=$(uname -m)
 function main()
 {
 cd /home
-compile_liboath_build # 编译liboath
+    compile_liboath_build # 编译liboath
     [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:compile liboath failed!" ERROR && return 1
     compile_zookeeper_build # 编译zookeeper
     [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:compile zookeeper failed!" ERROR && return 1

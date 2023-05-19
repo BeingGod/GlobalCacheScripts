@@ -9,8 +9,8 @@ set -e
 SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../common/log.sh
-source $SCRIPT_HOME/../liboath_check.sh 
-source $SCRIPT_HOME/../zookeeper_check.sh
+source $SCRIPT_HOME/liboath_check.sh 
+source $SCRIPT_HOME/zookeeper_check.sh
 
 
 # 检查cephlib是否已经编译过
@@ -58,6 +58,27 @@ function compile_server_check()
     cephlib_compile_check
     globalcache_adaptor_compile_check
     globalcache_log "------------server check end------------" WARN
+}
+
+# 检查client是否已经编译过
+client_uncompiled="false"
+function compile_client_check()
+{
+    globalcache_log "------------client compile check start------------" WARN
+    if [ ! -d "/home/rpmbuild/RPMS/$(uname -m)" ]; then
+        client_uncompiled="true"
+    fi
+
+    if [ ! -d "/home/rpmbuild/RPMS/noarch" ]; then
+        client_uncompiled="true"
+    fi
+
+    if [ "$client_uncompiled" == "true" ]; then
+        globalcache_log "Client need compile." WARN
+    else
+        globalcache_log "Client has been compiled." FATAL 
+    fi
+    globalcache_log "------------client compile check end------------" WARN
 }
 
 function main()
