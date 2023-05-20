@@ -15,11 +15,8 @@ function server_zookeeper_check()
     globalcache_log "------------server zookeeper check start------------" WARN
 
     if [ $(systemctl --all --type service | grep "zookeeper.service" | wc -l) -ne 1 ]; then
-        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:check gcache server failed!" FATAL
+        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:check zookeeper failed!" FATAL
     fi
-
-    service zookeeper status
-    [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:check zookeeper failed!" FATAL
 
     globalcache_log "------------server zookeeper check end------------" WARN
 }
