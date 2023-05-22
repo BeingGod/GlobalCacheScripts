@@ -74,9 +74,9 @@ function compile_client_check()
     fi
 
     if [ "$client_uncompiled" == "true" ]; then
-        globalcache_log "Client need compile." WARN
+        globalcache_log "Client need compile." FATAL 
     else
-        globalcache_log "Client has been compiled." FATAL 
+        globalcache_log "Client has been compiled." WARN 
     fi
     globalcache_log "------------client compile check end------------" WARN
 }
