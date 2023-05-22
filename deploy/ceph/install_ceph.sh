@@ -5,6 +5,7 @@
 # Create: 2023-02-28
 #-----------------------------------------------------------------------------------
 set -x
+set -e # 遇到错误停止执行
 SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../../common/log.sh
@@ -47,6 +48,13 @@ function partition()
 
   local nvme_list=$(cat /home/disklist.txt | grep -E -oe "nvme([0-9]*)n([0-9]*)")
   local nvme_num=$(cat /home/disklist.txt | grep -E -oe "nvme([0-9]*)n([0-9]*)" | wc -l)
+
+  local ccm_part_num=`expr $part_per_nvme \* 2 + 1`
+  for nvme in $nvme_list
+  do
+    sed -i "s#<device>#${nvme}p${ccm_part_num}#" /home/nodelist.txt
+  done
+
   for nvme in $nvme_list
   do
     parted -s /dev/$nvme mklabel gpt
@@ -73,12 +81,9 @@ function partition()
     local start=$end
   done
 
-  local ccm_part_num=`expr $part_per_nvme \* 2 + 1`
-
   for nvme in $nvme_list
   do
     parted /dev/$nvme mkpart primary ${end}MiB 100%
-    sed -i "s#<device>#${nvme}p${ccm_part_num}#" /home/nodelist.txt
   done
 
   for data_disk in $data_disk_list
