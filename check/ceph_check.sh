@@ -18,7 +18,7 @@ function ceph_check()
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:check ceph failed!" FATAL
     fi
 
-    globalcache_log "------------check ceph start------------" WARN
+    globalcache_log "------------check ceph end------------" WARN
 }
 
 function main()
