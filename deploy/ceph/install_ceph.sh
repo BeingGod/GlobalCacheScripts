@@ -49,6 +49,9 @@ function partition()
   local nvme_list=$(cat /home/disklist.txt | grep -E -oe "nvme([0-9]*)n([0-9]*)")
   local nvme_num=$(cat /home/disklist.txt | grep -E -oe "nvme([0-9]*)n([0-9]*)" | wc -l)
 
+  local data_disk_list=$(cat /home/disklist.txt | grep -E -oe "sd[a-z]")
+  local data_disk_num=$(cat /home/disklist.txt | grep -E -oe "sd[a-z]" | wc -l)
+  local part_per_nvme=$(expr $data_disk_num / $nvme_num)
   local ccm_part_num=`expr $part_per_nvme \* 2 + 1`
   for nvme in $nvme_list
   do
@@ -59,10 +62,7 @@ function partition()
   do
     parted -s /dev/$nvme mklabel gpt
   done
-  
-  local data_disk_list=$(cat /home/disklist.txt | grep -E -oe "sd[a-z]")
-  local data_disk_num=$(cat /home/disklist.txt | grep -E -oe "sd[a-z]" | wc -l)
-  local part_per_nvme=$(expr $data_disk_num / $nvme_num)
+
   local start=4
   for i in $(seq 1 $part_per_nvme)
   do
