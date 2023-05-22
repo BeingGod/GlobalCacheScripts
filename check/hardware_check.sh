@@ -13,7 +13,7 @@ function mem_conf_check()
   globalcache_log "------------check mem configuration start------------" WARN
 
   mem_info=$(free -g | grep Mem | awk '{print $2}')
-  if [[ "$mem_info" -gt 190 ]];then
+  if [[ "$mem_info" -ge 190 ]];then
     globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:check hardware success!" WARN
   else
     globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:check hardware failed,please check your mem" ERROR
