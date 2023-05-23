@@ -9,32 +9,6 @@ SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../../../common/log.sh
 
-# 安装依赖
-function install_dependency_packages()
-{
-  globalcache_log "------------install denpendency packages start------------" WARN
-
-  yum install createrepo -y
-
-  globalcache_log "------------install denpendency packages end------------" WARN
-}
-
-# 配置oath本地镜像
-function create_oath_local_source() 
-{
-  globalcache_log "------------create oath local source start------------" WARN
-
-  # 配置oath本地源
-  if [ ! -f /home/oath ]; then
-    mkdir -p /home/oath
-  fi
-
-  cd /home/oath
-  createrepo .
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:create oath local source failed!" ERROR && return 1
-
-  globalcache_log "------------create oath local source end------------" WARN
-}
 
 # 安装JDK
 function install_jdk()
