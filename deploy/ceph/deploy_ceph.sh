@@ -28,12 +28,10 @@ function deploy_mon()
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:deploy new members failed!" ERROR && return 1
 
   members=""
-  hosts=""
   while read line
   do
     if [ $(echo $line | grep -E -oe "ceph[0-9]*" | wc -l) -eq 1 ]; then
         members="$(echo $line | cut -d ' ' -f 2),$members"
-        hosts="$(echo $line | cut -d ' ' -f 1),$hosts"
     fi
   done < /home/hostnamelist.txt
 
@@ -127,11 +125,6 @@ function deploy_osd()
 
 function main()
 {
-  if [ ! -f "/home/script.conf" ]; then
-    globalcache_log "Please generated script config file first" WARN
-    globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:deploy ceph failed!" ERROR && return 1
-  fi
-
   deploy_mon
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:deploy ceph failed!" ERROR && return 1
 

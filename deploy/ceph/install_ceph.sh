@@ -15,8 +15,6 @@ function install_ceph()
 {
   globalcache_log "------------install ceph start------------" WARN
 
-  local hostname=$(cat /home/script.conf | grep hostname | cut -d ' ' -f 2)
-
   echo "sslverify=false
 deltarpm=0" >> /etc/yum.conf # 设置yum证书验证状态
 
@@ -99,8 +97,8 @@ function main()
   install_ceph
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install ceph failed!" ERROR && return 1
 
-  hostname=$(cat /home/script.conf | grep hostname | cut -d ' ' -f 2)
-  if [[ $hostname = "ceph1" ]]; then
+  realhostname=$(hostname)
+  if [[ $realhostname = "ceph1" ]]; then
     install_ceph_deploy_tools
     [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install ceph deploy tools failed!" ERROR && return 1
   fi

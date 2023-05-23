@@ -14,8 +14,6 @@ function configure_ntp_server()
 {
   globalcache_log "------------configure ntp server start------------" WARN
 
-  local hostname=$(cat /home/script.conf | grep hostname | cut -d ' ' -f 2)
-
   # 判断ntp是否安装
   yum -y install ntp ntpdate
   
@@ -47,11 +45,6 @@ stratum 8" > /etc/ntp.conf
 
 function main()
 {
-  if [ ! -f "/home/script.conf" ]; then
-    globalcache_log "Please generated script config file first" WARN
-    globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ceph env failed!" ERROR && return 1
-  fi
-
   configure_ntp_server
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ntp server failed!" ERROR && return 1
 }
