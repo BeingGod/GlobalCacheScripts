@@ -38,7 +38,7 @@ function deploy_mon()
   done < /home/hostnamelist.txt
 
   echo "public_network = $(cat /home/script.conf | grep public_network | cut -d ' ' -f 2)
-cluster_network =  $(cat /home/script.conf | grep public_network | cut -d ' ' -f 2)
+cluster_network =  $(cat /home/script.conf | grep cluster_network | cut -d ' ' -f 2)
 
 bluestore_prefer_deferred_size_hdd = 0
 rbd_op_threads=16 # rbd tp线程数
