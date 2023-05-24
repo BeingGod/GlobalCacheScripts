@@ -23,6 +23,11 @@ function configure_compile()
       mkdir -p ~/.pip
     fi
 
+    # 禁用fedora源
+    if [ -f "/etc/yum.repos.d/fedora.repo" ]; then
+      sed -i "s/enabled=1/enabled=0/g" /etc/yum.repos.d/fedora.repo
+    fi
+
     echo -e '[global]\ntimeout = 120\nindex-url = https://repo.huaweicloud.com/repository/pypi/simple\ntrusted-host = repo.huaweicloud.com' >> ~/.pip/pip.conf
 
     java -version
