@@ -17,7 +17,6 @@ function mem_conf_check()
     globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:check mem success!" WARN
   else
     globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:check mem failed,please check your mem" FATAL
-    return 1
   fi
 
   globalcache_log "------------check mem configuration end------------" WARN
@@ -34,7 +33,6 @@ function cpu_conf_check()
     globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:check cpu success!" WARN
   else
     globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:check cpu failed,please check your cpu" FATAL
-    return 2
   fi
 
   globalcache_log "------------check cpu configuration end------------" WARN
