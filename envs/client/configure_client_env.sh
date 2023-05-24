@@ -14,8 +14,10 @@ function configure_profile()
 {
   globalcache_log "------------configure /etc/profile start------------" WARN
 
-  echo "ulimit -n 524288" >> /etc/profile
-  source /etc/profile
+  if [ $(cat "/etc/profile" | grep -oe "ulimit -n 524288" | wc -l ) -eq 0 ];then
+    echo "ulimit -n 524288" >> /etc/profile
+    source /etc/profile
+  fi
 
   globalcache_log "------------configure /etc/profile end------------" WARN
 
@@ -54,7 +56,7 @@ function create_local_source()
   createrepo .
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:create ceph local source failed!" ERROR && return 1
 
-  if [ ! -d /home/oath ]; then
+  if [ ! -d "/home/oath" ]; then
     mkdir -p /home/oath
   fi
 
@@ -70,12 +72,14 @@ function configure_repo()
 {
   globalcache_log "------------configure mirror repo start------------" WARN
 
+  if [ $(cat "/etc/yum.repos.d/local.repo" | grep "[local]" | wc -l) -eq 0]; then
   echo "[local]
 name=local
 baseurl=file:///home/rpm
 enabled=1
 gpgcheck=0
 priority=1" >> /etc/yum.repos.d/local.repo
+  fi
 
   globalcache_log "------------configure mirror repo start------------" WARN
 }

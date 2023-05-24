@@ -51,8 +51,13 @@ function install_jdk()
     [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:extract jdk package failed!" ERROR && return 1
   fi
 
-  echo "export JAVA_HOME=/usr/local/jdk8u282-b08" >> /etc/profile
-  echo "export PATH=\${JAVA_HOME}/bin:\$PATH" >> /etc/profile
+  if [ $(cat "/etc/profile" | grep -oe "export JAVA_HOME=/usr/local/jdk8u282-b08" | wc -l ) -eq 0 ]; then
+    echo "export JAVA_HOME=/usr/local/jdk8u282-b08" >> /etc/profile
+  fi
+
+  if [ $(cat "/etc/profile" | grep -oe "export PATH=\${JAVA_HOME}/bin:\$PATH" | wc -l ) -eq 0 ]; then
+    echo "export PATH=\${JAVA_HOME}/bin:\$PATH" >> /etc/profile
+  fi
 
   source /etc/profile
 
@@ -74,9 +79,14 @@ function install_maven()
     [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:extract maven package failed!" ERROR && return 1
   fi
 
-  echo "export MAVEN_HOME=/usr/local/apache-maven-3.6.3" >> /etc/profile
-  echo "export PATH=\${PATH}:\${MAVEN_HOME}/bin" >> /etc/profile
+  if [ $(cat "/etc/profile" | grep -oe "export MAVEN_HOME=/usr/local/apache-maven-3.6.3" | wc -l ) -eq 0 ]; then
+    echo "export MAVEN_HOME=/usr/local/apache-maven-3.6.3" >> /etc/profile
+  fi
 
+  if [ $(cat "/etc/profile" | grep -oe "export PATH=\${PATH}:\${MAVEN_HOME}/bin" | wc -l ) -eq 0 ]; then
+    echo "export PATH=\${PATH}:\${MAVEN_HOME}/bin" >> /etc/profile
+  fi
+  
   source /etc/profile
 
   mvn -v

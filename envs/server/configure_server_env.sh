@@ -24,8 +24,13 @@ function install_jdk()
     [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:extract jdk package failed!" ERROR && return 1
   fi
 
-  echo "export JAVA_HOME=/usr/local/jdk8u282-b08" >> /etc/profile
-  echo "export PATH=\${JAVA_HOME}/bin:\$PATH" >> /etc/profile
+  if [ $(cat "/etc/profile" | grep -oe "export JAVA_HOME=/usr/local/jdk8u282-b08" | wc -l ) -eq 0 ]; then
+    echo "export JAVA_HOME=/usr/local/jdk8u282-b08" >> /etc/profile
+  fi
+
+  if [ $(cat "/etc/profile" | grep -oe "export PATH=\${JAVA_HOME}/bin:\$PATH" | wc -l ) -eq 0 ]; then
+    echo "export PATH=\${JAVA_HOME}/bin:\$PATH" >> /etc/profile
+  fi
 
   globalcache_log "------------install jdk end------------" WARN
 }

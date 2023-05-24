@@ -13,6 +13,7 @@ source $SCRIPT_HOME/../common/log.sh
 source $SCRIPT_HOME/compile_liboath.sh # 引入compile_liboath.sh脚本
 source $SCRIPT_HOME/compile_zookeeper.sh # 引入compile_zookeeper.sh脚本
 source $SCRIPT_HOME/compile_client.sh # 引入compile_client.sh脚本
+source /etc/profile
 
 cpu_type=$(uname -m)
 function main()

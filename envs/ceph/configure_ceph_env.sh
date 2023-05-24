@@ -86,32 +86,33 @@ function configure_repo()
 
   if [ -f "/etc/yum.repos.d/local.repo" ]; then
     rm -f /etc/yum.repos.d/local.repo
-  else
-    echo "[local-oath]
+  fi
+
+  echo "[local-oath]
 name=local-oath
 baseurl=file:///home/oath
 enabled=1
 gpgcheck=0 
 priority=1" > /etc/yum.repos.d/local.repo
-  fi
 
   if [ -f "/etc/yum.repos.d/fedora.repo" ]; then
     rm -f /etc/yum.repos.d/fedora.repo 
-  else
-    echo "[arch_fedora_online]
+  fi
+
+  echo "[arch_fedora_online]
 name=arch_fedora 
 baseurl=https://repo.huaweicloud.com/fedora/releases/34/Everything/aarch64/os/
 enabled=1
 gpgcheck=0 
 priority=2" > /etc/yum.repos.d/fedora.repo
-  fi
 
   local basearch="aarch64"
 
   if [ -f " /etc/yum.repos.d/ceph.repo" ]; then
     rm -f /etc/yum.repos.d/ceph.repo
-  else
-    echo "[Ceph] 
+  fi
+
+  echo "[Ceph] 
 name=Ceph packages for $basearch 
 baseurl=http://download.ceph.com/rpm-nautilus/el7/$basearch 
 enabled=1 
@@ -137,7 +138,6 @@ gpgcheck=1
 type=rpm-md 
 gpgkey=https://download.ceph.com/keys/release.asc 
 priority=1" > /etc/yum.repos.d/ceph.repo
-  fi
 
   globalcache_log "------------configure mirror repo end------------" WARN
 }

@@ -11,6 +11,7 @@ LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../../common/log.sh
 source $SCRIPT_HOME/client_zookeeper.sh # 引入client_zookeeper.sh脚本
 source $SCRIPT_HOME/client_globalcache.sh # 引入client_globalcache.sh脚本
+source /etc/profile
 
 function main()
 {
