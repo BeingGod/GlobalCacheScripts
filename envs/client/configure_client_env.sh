@@ -7,7 +7,7 @@
 set -x
 SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=/var/log/globalcache_script.log
-source $SCRIPT_HOME/../../../common/log.sh
+source $SCRIPT_HOME/../../common/log.sh
 
 # 设置shell启动进程所占用资源
 function configure_profile()

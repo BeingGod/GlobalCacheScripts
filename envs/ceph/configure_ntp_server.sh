@@ -7,7 +7,7 @@
 set -x
 SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=/var/log/globalcache_script.log
-source $SCRIPT_HOME/../../../common/log.sh
+source $SCRIPT_HOME/../../common/log.sh
 
 # 配置ntp服务端
 function configure_ntp_server()
