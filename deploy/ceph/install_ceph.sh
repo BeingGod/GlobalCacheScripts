@@ -114,6 +114,8 @@ function clean_ceph()
 
   pkill ceph
 
+  rm -rf /etc/ceph/ceph.conf
+
   rm -rf /var/lib/ceph/osd/*
   rm -rf /var/lib/ceph/mon/*
   rm -rf /var/lib/ceph/mds/*
@@ -124,8 +126,6 @@ function clean_ceph()
   rm -rf /var/lib/ceph/tmp/*
   rm -rf /etc/ceph/*
   rm -rf /var/run/ceph/*
-
-  rm -rf /root/my-cluster/*
 }
 
 function main()
