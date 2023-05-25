@@ -9,24 +9,39 @@ SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../../common/log.sh
 
-# 安装依赖
-function install_dependency_packages()
-{
-  globalcache_log "------------install denpendency packages start------------" WARN
-
-  yum install createrepo -y
-
-  globalcache_log "------------install denpendency packages end------------" WARN
-}
 
 # 配置oath本地镜像
 function create_oath_local_source() 
 {
   globalcache_log "------------create oath local source start------------" WARN
 
+  yum install createrepo -y
+
   cd /home/oath
   createrepo .
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:create oath local source failed!" ERROR && return 1
+
+  if [ -f "/etc/yum.repos.d/local.repo" ]; then
+    rm -f /etc/yum.repos.d/local.repo
+  fi
+
+  echo "[local-oath]
+name=local-oath
+baseurl=file:///home/oath
+enabled=1
+gpgcheck=0 
+priority=1" > /etc/yum.repos.d/local.repo
+
+  if [ -f "/etc/yum.repos.d/fedora.repo" ]; then
+    rm -f /etc/yum.repos.d/fedora.repo 
+  fi
+
+  echo "[arch_fedora_online]
+name=arch_fedora 
+baseurl=https://repo.huaweicloud.com/fedora/releases/36/Everything/aarch64/os/
+enabled=1
+gpgcheck=0 
+priority=2" > /etc/yum.repos.d/fedora.repo
 
   globalcache_log "------------create oath local source end------------" WARN
 }
@@ -75,31 +90,9 @@ function configure_permissive_mode()
 }
 
 # 配置镜像仓库
-function configure_repo()
+function configure_ceph_repo()
 {
   globalcache_log "------------configure mirror repo start------------" WARN
-
-  if [ -f "/etc/yum.repos.d/local.repo" ]; then
-    rm -f /etc/yum.repos.d/local.repo
-  fi
-
-  echo "[local-oath]
-name=local-oath
-baseurl=file:///home/oath
-enabled=1
-gpgcheck=0 
-priority=1" > /etc/yum.repos.d/local.repo
-
-  if [ -f "/etc/yum.repos.d/fedora.repo" ]; then
-    rm -f /etc/yum.repos.d/fedora.repo 
-  fi
-
-  echo "[arch_fedora_online]
-name=arch_fedora 
-baseurl=https://repo.huaweicloud.com/fedora/releases/36/Everything/aarch64/os/
-enabled=1
-gpgcheck=0 
-priority=2" > /etc/yum.repos.d/fedora.repo
 
   local basearch="aarch64"
 
@@ -139,10 +132,8 @@ priority=1" > /etc/yum.repos.d/ceph.repo
 
 function main()
 {
-  configure_repo
+  configure_ceph_repo
   
-  install_dependency_packages
-
   create_oath_local_source
 
   # 安装compat-openssl
