@@ -45,7 +45,7 @@ bluestore_default_buffered_read = false # 当读取完成时，根据标记决�
 [mon]
 mon_allow_pool_delete = true" >> /etc/ceph/ceph.conf
 
-  ceph-deploy --overwrite-conf mon create-initial
+  ceph-deploy mon create-initial
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:init deploy mon failed!" ERROR && return 1
 
   nodes=""
@@ -54,7 +54,7 @@ mon_allow_pool_delete = true" >> /etc/ceph/ceph.conf
     nodes="$nodes $node"
   done
 
-  ceph-deploy  --overwrite-conf admin $nodes
+  ceph-deploy admin $nodes
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:distribute keyring failed!" ERROR && return 1
 
   ceph -s
@@ -75,7 +75,7 @@ function deploy_mgr()
     members="$members $ceph"
   done
   
-  ceph-deploy --overwrite-conf mgr create $members
+  ceph-deploy mgr create $members
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:deploy mgr failed!" ERROR && return 1
 
   ceph -s
