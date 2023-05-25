@@ -14,6 +14,9 @@ function deploy_mon()
 {
   globalcache_log "------------deploy mon start------------" WARN
 
+  # 清理配置文件
+  pdsh -g ceph "rm -rf /etc/ceph/ceph.conf"
+
   cd /etc/ceph
 
   members=""
