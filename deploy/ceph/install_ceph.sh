@@ -105,14 +105,20 @@ function partition()
 # 清理ceph环境
 function clean_ceph()
 {
+  ceph -s > /dev/null 2>&1
+
   # 清理osd
-  local osd_num=$(ceph -s | grep -o -E "[0-9]+ osds" | awk '{printf $1}')
-  for i in $(seq 0 $osd_num)
-  do
-    bash $SCRIPT_HOME/trim_osd.sh $i
-  done
+  if [ $? -eq 0 ]; then
+    local osd_num=$(ceph -s | grep -o -E "[0-9]+ osds" | awk '{printf $1}')
+    for i in $(seq 0 $osd_num)
+    do
+      bash $SCRIPT_HOME/trim_osd.sh $i
+    done
+  fi
 
   pkill ceph
+
+  rm -rf /etc/ceph/ceph.conf
 
   rm -rf /var/lib/ceph/osd/*
   rm -rf /var/lib/ceph/mon/*
