@@ -97,10 +97,35 @@ function partition()
   globalcache_log "------------partition end------------" WARN
 }
 
+# 清理ceph环境
+function clean_ceph()
+{
+  # 清理osd
+  local osd_num=$(ceph -s | grep -o -E "[0-9]+ osds" | awk '{printf $1}')
+  for i in $(seq 0 $osd_num)
+  do
+    bash $SCRIPT_HOME/trim_osd.sh $i
+  done
+
+  pkill ceph
+
+  rm -rf /var/lib/ceph/osd/*
+  rm -rf /var/lib/ceph/mon/*
+  rm -rf /var/lib/ceph/mds/*
+  rm -rf /var/lib/ceph/bootstrap-mds/*
+  rm -rf /var/lib/ceph/bootstrap-osd/*
+  rm -rf /var/lib/ceph/bootstrap-rgw/*
+  rm -rf /var/lib/ceph/bootstrap-mgr/*
+  rm -rf /var/lib/ceph/tmp/*
+  rm -rf /etc/ceph/*
+  rm -rf /var/run/ceph/*
+
+  rm -rf /root/my-cluster/*
+}
+
 function main()
 {
   install_ceph
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install ceph failed!" ERROR && return 1
 
   realhostname=$(hostname)
   if [[ $realhostname = "ceph1" ]]; then
@@ -109,6 +134,7 @@ function main()
   fi
 
   partition
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install ceph deploy tools failed!" ERROR && return 1
+
+  clean_ceph
 }
 main
