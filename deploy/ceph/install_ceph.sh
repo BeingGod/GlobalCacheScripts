@@ -114,8 +114,6 @@ function clean_ceph()
 
   pkill ceph
 
-  rm -rf /etc/ceph/ceph.conf
-
   rm -rf /var/lib/ceph/osd/*
   rm -rf /var/lib/ceph/mon/*
   rm -rf /var/lib/ceph/mds/*
