@@ -15,8 +15,13 @@ function install_ceph()
 {
   globalcache_log "------------install ceph start------------" WARN
 
-  echo "sslverify=false
-deltarpm=0" >> /etc/yum.conf # 设置yum证书验证状态
+  if [ $(cat "/etc/yum.conf" | grep -oe "sslverify=false" | wc -l) -eq 0 ]; then
+    echo "sslverify=false" >> /etc/yum.conf # 设置yum证书验证状态
+  fi
+
+  if [ $(cat "/etc/yum.conf" | grep -oe "deltarpm=0" | wc -l) -eq 0 ]; then
+    echo "deltarpm=0" >> /etc/yum.conf # 设置yum证书验证状态
+  fi
 
   dnf -y install librados2-14.2.8 ceph-14.2.8
 
