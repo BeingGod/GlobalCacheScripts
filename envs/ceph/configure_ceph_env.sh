@@ -24,11 +24,6 @@ function create_oath_local_source()
 {
   globalcache_log "------------create oath local source start------------" WARN
 
-  # 配置oath本地源
-  if [ ! -f /home/oath ]; then
-    mkdir -p /home/oath
-  fi
-
   cd /home/oath
   createrepo .
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:create oath local source failed!" ERROR && return 1
@@ -146,6 +141,10 @@ function main()
 {
   configure_repo
   
+  install_dependency_packages
+
+  create_oath_local_source
+
   # 安装compat-openssl
   install_compat_openssl
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure ceph env failed!" ERROR && return 1
