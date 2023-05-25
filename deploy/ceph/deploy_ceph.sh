@@ -14,9 +14,6 @@ function deploy_mon()
 {
   globalcache_log "------------deploy mon start------------" WARN
 
-  # 清理配置文件
-  pdsh -g ceph "rm -rf /etc/ceph/ceph.conf"
-
   cd /etc/ceph
 
   members=""
@@ -48,7 +45,7 @@ bluestore_default_buffered_read = false # 当读取完成时，根据标记决�
 [mon]
 mon_allow_pool_delete = true" >> /etc/ceph/ceph.conf
 
-  ceph-deploy mon create-initial
+  ceph-deploy --overwrite-conf mon create-initial
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:init deploy mon failed!" ERROR && return 1
 
   nodes=""
@@ -57,7 +54,7 @@ mon_allow_pool_delete = true" >> /etc/ceph/ceph.conf
     nodes="$nodes $node"
   done
 
-  ceph-deploy admin $nodes
+  ceph-deploy  --overwrite-conf admin $nodes
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:distribute keyring failed!" ERROR && return 1
 
   ceph -s
@@ -78,7 +75,7 @@ function deploy_mgr()
     members="$members $ceph"
   done
   
-  ceph-deploy mgr create $members
+  ceph-deploy --overwrite-conf mgr create $members
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:deploy mgr failed!" ERROR && return 1
 
   ceph -s
@@ -128,6 +125,9 @@ function deploy_osd()
 
 function main()
 {
+  # 清理配置文件
+  pdsh -g ceph "rm -rf /etc/ceph/ceph.conf"
+
   deploy_mon
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:deploy ceph failed!" ERROR && return 1
 
