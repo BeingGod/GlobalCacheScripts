@@ -96,7 +96,6 @@ function partition()
   for data_disk in $data_disk_list
   do
     ceph-volume lvm zap /dev/$data_disk --destroy
-    sleep 30 
   done
 
   globalcache_log "------------partition end------------" WARN
