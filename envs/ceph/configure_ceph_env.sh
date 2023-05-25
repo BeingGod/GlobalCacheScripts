@@ -18,9 +18,11 @@ function create_oath_local_source()
   yum install createrepo -y
 
   cd /home/oath
-  createrepo .
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:create oath local source failed!" ERROR && return 1
-
+  if [ ! -d "/home/oath/repodata" ]; then
+    createrepo .
+    [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:create oath local source failed!" ERROR && return 1
+  fi
+  
   if [ -f "/etc/yum.repos.d/local.repo" ]; then
     rm -f /etc/yum.repos.d/local.repo
   fi
