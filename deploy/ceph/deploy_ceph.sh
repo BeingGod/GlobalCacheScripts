@@ -126,7 +126,7 @@ function deploy_osd()
 function main()
 {
   # 清理配置文件
-  pdsh -g ceph "rm -rf /etc/ceph/ceph.conf"
+  pdsh -g ceph "rm -rf /etc/ceph/*"
 
   deploy_mon
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:deploy ceph failed!" ERROR && return 1
