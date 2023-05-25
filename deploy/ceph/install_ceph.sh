@@ -102,34 +102,6 @@ function partition()
   globalcache_log "------------partition end------------" WARN
 }
 
-# 清理ceph环境
-function clean_ceph()
-{
-  ceph -s > /dev/null 2>&1
-
-  # 清理osd
-  if [ $? -eq 0 ]; then
-    local osd_num=$(ceph -s | grep -o -E "[0-9]+ osds" | awk '{printf $1}')
-    for i in $(seq 0 $osd_num)
-    do
-      bash $SCRIPT_HOME/trim_osd.sh $i
-    done
-  fi
-
-  pkill ceph
-
-  rm -rf /var/lib/ceph/osd/*
-  rm -rf /var/lib/ceph/mon/*
-  rm -rf /var/lib/ceph/mds/*
-  rm -rf /var/lib/ceph/bootstrap-mds/*
-  rm -rf /var/lib/ceph/bootstrap-osd/*
-  rm -rf /var/lib/ceph/bootstrap-rgw/*
-  rm -rf /var/lib/ceph/bootstrap-mgr/*
-  rm -rf /var/lib/ceph/tmp/*
-  rm -rf /etc/ceph/*
-  rm -rf /var/run/ceph/*
-}
-
 function main()
 {
   install_ceph
@@ -141,7 +113,5 @@ function main()
   fi
 
   partition
-
-  clean_ceph
 }
 main

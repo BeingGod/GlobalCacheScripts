@@ -9,6 +9,20 @@ SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../../common/log.sh
 
+# 清理osd
+function clean_osd()
+{
+  ceph -s > /dev/null 2>&1
+
+  if [ $? -eq 0 ]; then
+    local osd_num=$(ceph -s | grep -o -E "[0-9]+ osds" | awk '{printf $1}')
+    for i in $(seq 0 $osd_num)
+    do
+      bash $SCRIPT_HOME/trim_osd.sh $i
+    done
+  fi
+}
+
 # 部署mon节点
 function deploy_mon()
 {
@@ -125,6 +139,9 @@ function deploy_osd()
 
 function main()
 {
+  # 清理部署缓存
+  pdsh -g ceph "bash $SCRIPT_HOME/clean_ceph.sh"
+
   # 清理配置文件
   pdsh -g ceph "rm -rf /etc/ceph/*"
 
