@@ -18,6 +18,23 @@ function ceph_check()
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:check ceph failed!" FATAL
     fi
 
+    local realhostname=$(hostname)
+    if [ $realhostname = "ceph1" ]; then
+        osd_num=0
+        while read line
+        do
+            if [ $(echo $line | grep -E -oe "ceph[0-9]*" | wc -l) -eq 1 ]; then
+                local hostname=$(echo $line | grep -E -oe "ceph[0-9]*")
+                local data_disk_num=$(cat "/home/disklist_${hostname}.txt" | grep -E -oe "sd[a-z]" | wc -l)
+                osd_num = $(expr $osd_num + $data_disk_num)
+            fi
+        done < /home/hostnamelist.txt
+
+        if [ $(ceph -s | grep -o -E "[0-9]+ osds" | awk '{printf $1}') -eq $osd_num ]; then
+            globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:check ceph failed, osd deploy failed!" FATAL 
+        fi
+    fi
+
     globalcache_log "------------check ceph end------------" WARN
 }
 
