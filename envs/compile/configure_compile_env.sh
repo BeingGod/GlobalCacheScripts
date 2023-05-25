@@ -30,6 +30,8 @@ function configure_compile()
 
     echo -e '[global]\ntimeout = 120\nindex-url = https://repo.huaweicloud.com/repository/pypi/simple\ntrusted-host = repo.huaweicloud.com' >> ~/.pip/pip.conf
 
+    yum clean all
+
     java -version
     [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure java failed!" ERROR && return 1
 
