@@ -64,7 +64,7 @@ function partition()
   for nvme in $nvme_list
   do
     parted -s /dev/$nvme mklabel gpt
-    sleep 10
+    sleep 5
   done
 
   local start=4
@@ -74,7 +74,7 @@ function partition()
     for nvme in $nvme_list
     do
       parted /dev/$nvme mkpart primary ${start}MiB ${end}MiB
-      sleep 10
+      sleep 5
     done
     local start=$end
 
@@ -82,7 +82,7 @@ function partition()
     for nvme in $nvme_list
     do
       parted /dev/$nvme mkpart primary ${start}MiB ${end}MiB
-      sleep 10
+      sleep 5
     done
     local start=$end
   done
@@ -90,13 +90,13 @@ function partition()
   for nvme in $nvme_list
   do
     parted /dev/$nvme mkpart primary ${end}MiB 100%
-    sleep 10
+    sleep 5
   done
 
   for data_disk in $data_disk_list
   do
     ceph-volume lvm zap /dev/$data_disk --destroy
-    sleep 10
+    sleep 5
   done
 
   globalcache_log "------------partition end------------" WARN
