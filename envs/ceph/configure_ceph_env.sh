@@ -15,6 +15,10 @@ function create_oath_local_source()
 {
   globalcache_log "------------create oath local source start------------" WARN
 
+  if [ -f "/etc/yum.repos.d/local.repo" ]; then
+    rm -f /etc/yum.repos.d/local.repo
+  fi
+
   yum install createrepo -y
 
   cd /home/oath
@@ -23,10 +27,6 @@ function create_oath_local_source()
     [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:create oath local source failed!" ERROR && return 1
   fi
   
-  if [ -f "/etc/yum.repos.d/local.repo" ]; then
-    rm -f /etc/yum.repos.d/local.repo
-  fi
-
   echo "[local-oath]
 name=local-oath
 baseurl=file:///home/oath
