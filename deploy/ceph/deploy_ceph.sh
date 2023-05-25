@@ -54,7 +54,7 @@ mon_allow_pool_delete = true" >> /etc/ceph/ceph.conf
     nodes="$nodes $node"
   done
 
-  ceph-deploy admin $nodes
+  ceph-deploy --overwrite-conf admin $nodes
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:distribute keyring failed!" ERROR && return 1
 
   ceph -s
