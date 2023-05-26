@@ -19,7 +19,9 @@ function create_oath_local_source()
     rm -f /etc/yum.repos.d/local.repo
   fi
 
-  yum install createrepo -y
+  if [ $(yum list installed | grep "createrepo" | wc -l) -eq 0]; then
+    yum install createrepo -y
+  fi
 
   cd /home/oath
   if [ ! -d "/home/oath/repodata" ]; then
