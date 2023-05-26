@@ -38,7 +38,6 @@ function install_ceph_deploy_tools()
   globalcache_log "------------install ceph deploy tools start------------" WARN
 
   pip install ceph-deploy
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install python package failed!" ERROR && return 1
   echo "y" | cp $SCRIPT_HOME/__init__.py /lib/python2.7/site-packages/ceph_deploy/hosts/
 
   globalcache_log "------------install ceph deploy tools end------------" WARN
@@ -61,20 +60,9 @@ function partition()
     sed -i "s#<device>#${nvme}p${ccm_part_num}#" /home/nodelist.txt
   done
 
-  for i in $(seq 2 `expr $data_disk_num + 1`)
-  do
-    local ceph_logic=$(lsblk | grep "ceph" | awk '{printf $1}' | cut -d '`' -f $i)
-    if [ ! -z $ceph_logic ]; then
-      dmsetup remove ${ceph_logic:1}
-      sleep 5
-    fi
-  done
-
   for data_disk in $data_disk_list
   do
-    dd if=/dev/zero of=/dev/$data_disk bs=512K count=1
-    sleep 5
-    # ceph-volume lvm zap /dev/$data_disk --destroy
+    ceph-volume lvm zap /dev/$data_disk --destroy
   done
 
   for nvme in $nvme_list
@@ -119,7 +107,6 @@ function main()
   realhostname=$(hostname)
   if [[ $realhostname = "ceph1" ]]; then
     install_ceph_deploy_tools
-    [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install ceph deploy tools failed!" ERROR && return 1
   fi
 
   partition

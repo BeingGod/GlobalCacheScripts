@@ -22,30 +22,6 @@ function trim_osd()
     ceph auth del osd.$i
 }
 
-# 清理ceph环境
-function clean_ceph()
-{
-    globalcache_log "------------clean pdsh start------------" WARN
-
-    pkill ceph
-
-    umount /var/lib/ceph/osd/*
-    sleep 60
-
-    rm -rf /var/lib/ceph/osd/*
-    rm -rf /var/lib/ceph/mon/*
-    rm -rf /var/lib/ceph/mds/*
-    rm -rf /var/lib/ceph/bootstrap-mds/*
-    rm -rf /var/lib/ceph/bootstrap-osd/*
-    rm -rf /var/lib/ceph/bootstrap-rgw/*
-    rm -rf /var/lib/ceph/bootstrap-mgr/*
-    rm -rf /var/lib/ceph/tmp/*
-    rm -rf /etc/ceph/*
-    rm -rf /var/run/ceph/*
-
-    globalcache_log "------------clean ceph end------------" WARN
-}
-
 function main()
 {
     ceph -s > /dev/null 2>&1

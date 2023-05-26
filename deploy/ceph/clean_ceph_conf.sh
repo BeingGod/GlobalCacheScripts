@@ -16,9 +16,6 @@ function clean_ceph_conf()
 
   pkill ceph
 
-  umount /var/lib/ceph/osd/*
-  sleep 60
-
   rm -rf /var/lib/ceph/osd/*
   rm -rf /var/lib/ceph/mon/*
   rm -rf /var/lib/ceph/mds/*
