@@ -10,7 +10,7 @@ LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../../common/log.sh
 
 # 清理ceph环境
-function clean_ceph()
+function clean_ceph_conf()
 {
   globalcache_log "------------clean pdsh start------------" WARN
 
@@ -35,6 +35,6 @@ function clean_ceph()
 
 function main()
 {
-  clean_ceph
+  clean_ceph_conf
 }
 main

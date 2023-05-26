@@ -127,12 +127,9 @@ function main()
 {
   # 清理OSD
   bash $SCRIPT_HOME/clean_osd.sh
-  
-  # 清理部署缓存
-  pdsh -g ceph "bash $SCRIPT_HOME/clean_ceph.sh"
 
-  # 清理配置文件
-  pdsh -g ceph "rm -rf /etc/ceph/*"
+  # 清理Ceph环境
+  pdsh -g ceph "bash '$SCRIPT_HOME/clean_ceph_conf.sh'"
 
   deploy_mon
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:deploy ceph failed!" ERROR && return 1
