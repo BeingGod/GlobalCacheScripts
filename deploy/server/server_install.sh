@@ -17,6 +17,12 @@ source /etc/profile
 function main()
 {
 cd /home
+    # 卸载已安装的globalcache
+    server_zookeeper_uninstall # 卸载服务端zookeeper
+    [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:server zookeeper uninstall failed!" ERROR && return 1
+    server_globalcache_uninstall # 卸载服务端globalcache
+    [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:server zookeeper uninstall failed!" ERROR && return 1
+
     server_zookeeper_install # 安装服务端zookeeper
     [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:server zookeeper install failed!" ERROR && return 1
     server_globalcache_install # 安装服务端globalcache
