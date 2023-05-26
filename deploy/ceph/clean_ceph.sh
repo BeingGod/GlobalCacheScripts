@@ -5,11 +5,19 @@
 # Create: 2023-05-25
 #-----------------------------------------------------------------------------------
 set -x
+SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
+LOG_FILE=/var/log/globalcache_script.log
+source $SCRIPT_HOME/../../common/log.sh
 
 # 清理ceph环境
 function clean_ceph()
 {
+  globalcache_log "------------clean pdsh start------------" WARN
+
   pkill ceph
+
+  umount /var/lib/ceph/osd/*
+  sleep 60
 
   rm -rf /var/lib/ceph/osd/*
   rm -rf /var/lib/ceph/mon/*
@@ -21,6 +29,12 @@ function clean_ceph()
   rm -rf /var/lib/ceph/tmp/*
   rm -rf /etc/ceph/*
   rm -rf /var/run/ceph/*
+
+  globalcache_log "------------clean ceph end------------" WARN
 }
 
-clean_ceph
+function main()
+{
+  clean_ceph
+}
+main

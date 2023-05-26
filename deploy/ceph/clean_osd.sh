@@ -5,8 +5,11 @@
 # Create: 2023-05-25
 #-----------------------------------------------------------------------------------
 set -x
+SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
+LOG_FILE=/var/log/globalcache_script.log
+source $SCRIPT_HOME/../../common/log.sh
 
-function clean_osd()
+function trim_osd()
 {
     i=$1
     ceph osd crush reweight osd.$i 0.0
@@ -18,4 +21,17 @@ function clean_osd()
     ceph auth del osd.$i
 }
 
-clean_osd $1
+# 清理osd
+function main()
+{
+  ceph -s > /dev/null 2>&1
+
+  if [ $? -eq 0 ]; then
+    local osd_num=$(ceph -s | grep -o -E "[0-9]+ osds" | awk '{printf $1}')
+    for i in $(seq 0 $osd_num)
+    do
+      trim_osd $i
+    done
+  fi
+}
+main
