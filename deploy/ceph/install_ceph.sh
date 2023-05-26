@@ -61,6 +61,22 @@ function partition()
     sed -i "s#<device>#${nvme}p${ccm_part_num}#" /home/nodelist.txt
   done
 
+  for i in $(seq 2 `expr $data_disk_num + 1`)
+  do
+    local ceph_logic=$(lsblk | grep "ceph" | awk '{printf $1}' | cut -d '`' -f $i)
+    if [ ! -z $ceph_logic ]; then
+      dmsetup remove ${ceph_logic:1}
+      sleep 5
+    fi
+  done
+
+  for data_disk in $data_disk_list
+  do
+    dd if=/dev/zero of=/dev/$data_disk bs=512K count=1
+    sleep 5
+    # ceph-volume lvm zap /dev/$data_disk --destroy
+  done
+
   for nvme in $nvme_list
   do
     parted -s /dev/$nvme mklabel gpt
@@ -91,12 +107,6 @@ function partition()
   do
     parted /dev/$nvme mkpart primary ${end}MiB 100%
     sleep 10
-  done
-
-  for data_disk in $data_disk_list
-  do
-    dd if=/dev/zero of=/dev/$data_disk bs=512K count=1
-    ceph-volume lvm zap /dev/$data_disk --destroy
   done
 
   globalcache_log "------------partition end------------" WARN
