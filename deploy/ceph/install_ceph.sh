@@ -95,6 +95,7 @@ function partition()
 
   for data_disk in $data_disk_list
   do
+    dd if=/dev/zero of=/dev/$data_disk bs=512K count=1
     ceph-volume lvm zap /dev/$data_disk --destroy
   done
 
