@@ -9,6 +9,17 @@ SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../../common/log.sh
 
+# 安装ceph-deploy
+function install_ceph_deploy_tools()
+{
+  globalcache_log "------------install ceph deploy tools start------------" WARN
+
+  pip install ceph-deploy
+  echo "y" | cp $SCRIPT_HOME/__init__.py /lib/python2.7/site-packages/ceph_deploy/hosts/
+
+  globalcache_log "------------install ceph deploy tools end------------" WARN
+}
+
 # 部署mon节点
 function deploy_mon()
 {
@@ -148,6 +159,8 @@ function clean_osd()
 
 function main()
 {
+  install_ceph_deploy_tools
+
   # 清理OSD
   clean_osd
 

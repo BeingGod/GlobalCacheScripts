@@ -32,17 +32,6 @@ function install_ceph()
   globalcache_log "------------install ceph end------------" WARN
 }
 
-# 安装ceph-deploy
-function install_ceph_deploy_tools()
-{
-  globalcache_log "------------install ceph deploy tools start------------" WARN
-
-  pip install ceph-deploy
-  echo "y" | cp $SCRIPT_HOME/__init__.py /lib/python2.7/site-packages/ceph_deploy/hosts/
-
-  globalcache_log "------------install ceph deploy tools end------------" WARN
-}
-
 # 划分磁盘分区
 function partition()
 {
@@ -103,11 +92,6 @@ function partition()
 function main()
 {
   install_ceph
-
-  realhostname=$(hostname)
-  if [[ $realhostname = "ceph1" ]]; then
-    install_ceph_deploy_tools
-  fi
 
   partition
 }
