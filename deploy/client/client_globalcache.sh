@@ -23,17 +23,6 @@ function globalcache_install()
     fi
     source /etc/profile
 
-    if [ -f "fio-3.26.tar.gz" ]; then
-        tar -zxvf fio-3.26.tar.gz
-    else
-        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:fio-3.26.tar.gz not exist." ERROR
-        return 1
-    fi
-    cd fio-3.26/
-    ./configure
-    make && make install
-    [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install fio failed!" ERROR && return 1
-
     globalcache_log "------------globalcache install end------------" WARN
 }
 
