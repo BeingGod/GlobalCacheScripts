@@ -11,7 +11,7 @@ LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../common/log.sh
 source $SCRIPT_HOME/liboath_check.sh 
 source $SCRIPT_HOME/zookeeper_check.sh
-
+set "+e"
 
 # 检查cephlib是否已经编译过
 cephlib_uncompiled="false"

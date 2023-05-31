@@ -8,6 +8,7 @@
 SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../common/log.sh
+set "+e"
 
 # 检查liboath是否已经编译过
 liboath_uncompiled="false"

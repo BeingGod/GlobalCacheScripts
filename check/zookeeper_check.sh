@@ -8,14 +8,16 @@
 SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../common/log.sh
+set "+e"
 
 # 检查zookeeper
 function server_zookeeper_check()
 {
     globalcache_log "------------server zookeeper check start------------" WARN
 
-    if [ $(systemctl --all --type service | grep "zookeeper.service" | wc -l) -ne 1 ]; then
-        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:check zookeeper failed!" FATAL
+    local state=$(systemctl status zookeeper | grep -oe "activate" | wc -l)
+    if [ $state -eq 0 ]; then
+        globalcache_log "------------zookeeper service check failed!------------" FATAL 
     fi
 
     globalcache_log "------------server zookeeper check end------------" WARN

@@ -162,7 +162,7 @@ function main()
   install_ceph_deploy_tools
 
   # 清理OSD
-  clean_osd
+  # clean_osd
 
   # 清理Ceph环境
   pdsh -g ceph "bash '$SCRIPT_HOME/clean_ceph_conf.sh'"
