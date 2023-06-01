@@ -13,6 +13,7 @@ source $SCRIPT_HOME/../../common/log.sh
 source $SCRIPT_HOME/server_zookeeper.sh # 引入server_zookeeper.sh脚本
 source $SCRIPT_HOME/server_globalcache.sh # 引入server_globalcache.sh脚本
 source /etc/profile
+set "+e"
 
 function main()
 {

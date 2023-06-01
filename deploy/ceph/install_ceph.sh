@@ -9,6 +9,7 @@ set -e # 遇到错误停止执行
 SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../../common/log.sh
+set "+e"
 
 # 安装ceph
 function install_ceph()
