@@ -16,14 +16,12 @@ function server_globalcache_check()
 {
     globalcache_log "------------server globalcache check start------------" WARN
 
-    local state=$(systemctl status globalcache | grep -oe "activate" | wc -l)
-    if [ $state -eq 0 ]; then
-        globalcache_log "------------globalcache service check failed!------------" FATAL 
+    if [ $(systemctl --all --type service | grep "globalcache.service" | wc -l) -ne 1 ]; then
+        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:check gcache service failed!" FATAL
     fi
 
-    local state=$(systemctl status ccm | grep -oe "activate" | wc -l)
-    if [ $state -eq 0 ]; then
-        globalcache_log "------------ccm service check failed!------------" FATAL 
+    if [ $(systemctl --all --type service | grep "ccm.service" | wc -l) -ne 1 ]; then
+        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:check ccm service failed!" FATAL
     fi
 
     globalcache_log "------------server globalcache check end------------" WARN
