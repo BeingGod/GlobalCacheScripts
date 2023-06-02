@@ -82,21 +82,10 @@ function main()
 {
   globalcache_log "------------configure Global Cache environment start------------" WARN
 
-  install_dependency_packages
-  
-  create_oath_local_source
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure Global Cache environment failed!" ERROR && return 1
-  
-  configure_repo
-  yum clean all -y && yum makecache -y
-
   install_jdk
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure Global Cache environment failed!" ERROR && return 1
 
   install_openssl  
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure Global Cache environment failed!" ERROR && return 1
-
-  install_sysstat
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure Global Cache environment failed!" ERROR && return 1
 
   globalcache_log "------------configure Global Cache environment success------------" WARN
