@@ -10,6 +10,15 @@ LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../../common/log.sh
 set "+e"
 
+# 安装依赖包
+function install_dependencies()
+{
+  globalcache_log "------------install dependencies start------------" WARN
+
+  yum install -y net-tools sysstat
+
+  globalcache_log "------------install dependencies end------------" WARN
+}
 
 # 配置oath本地镜像
 function create_oath_local_source() 
@@ -18,6 +27,11 @@ function create_oath_local_source()
 
   if [ -f "/etc/yum.repos.d/local.repo" ]; then
     rm -f /etc/yum.repos.d/local.repo
+  fi
+
+  # 禁用fedora源
+  if [ -f "/etc/yum.repos.d/fedora.repo" ]; then
+    sed -i "s/enabled=1/enabled=0/g" /etc/yum.repos.d/fedora.repo
   fi
 
   if [ $(yum list installed | grep "createrepo" | wc -l) -eq 0]; then
@@ -137,6 +151,8 @@ priority=1" > /etc/yum.repos.d/ceph.repo
 
 function main()
 {
+  install_dependencies
+
   configure_ceph_repo
   
   create_oath_local_source
