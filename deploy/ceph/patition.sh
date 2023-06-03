@@ -1,6 +1,6 @@
 #!/bin/bash
 #------------------------------------------------------------------------------------
-# Description: ceph安装脚本 (all ceph)
+# Description: 格式化脚本 
 # Author: beinggod
 # Create: 2023-02-28
 #-----------------------------------------------------------------------------------
@@ -10,28 +10,6 @@ SCRIPT_HOME=$(cd $(dirname $0)/; pwd)
 LOG_FILE=/var/log/globalcache_script.log
 source $SCRIPT_HOME/../../common/log.sh
 set "+e"
-
-# 安装ceph
-function install_ceph()
-{
-  globalcache_log "------------install ceph start------------" WARN
-
-  if [ $(cat "/etc/yum.conf" | grep -oe "sslverify=false" | wc -l) -eq 0 ]; then
-    echo "sslverify=false" >> /etc/yum.conf # 设置yum证书验证状态
-  fi
-
-  if [ $(cat "/etc/yum.conf" | grep -oe "deltarpm=0" | wc -l) -eq 0 ]; then
-    echo "deltarpm=0" >> /etc/yum.conf # 设置yum证书验证状态
-  fi
-
-  dnf -y install librados2-14.2.8 ceph-14.2.8
-
-  pip install prettytable werkzeug
-
-  ceph -v
-
-  globalcache_log "------------install ceph end------------" WARN
-}
 
 # 划分磁盘分区
 function partition()
@@ -92,8 +70,6 @@ function partition()
 
 function main()
 {
-  install_ceph
-
   partition
 }
 main
