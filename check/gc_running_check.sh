@@ -33,7 +33,7 @@ function gc_running_check()
 {
     globalcache_log "------------globalcache running check start------------" WARN
 
-    local state=$(systemctl status globalcache | grep -oe "running" | wc -l)
+    local state=$(systemctl status globalcache | grep -oe "GlobalCache Running" | wc -l)
     if [ $state -eq 0 ]; then
         globalcache_log "------------globalcache running check failed!------------" FATAL 
     fi
