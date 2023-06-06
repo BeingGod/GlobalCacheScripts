@@ -41,49 +41,6 @@ function install_dependency_packages()
   globalcache_log "------------install denpendency packages end------------" WARN
 }
 
-# 创建Ceph和oath的本地源
-function create_local_source()
-{
-  globalcache_log "------------create local source start------------" WARN
-
-  if [ ! -d /home/rpm ]; then
-    mkdir -p /home/rpm
-  fi
-
-  # copy compiled RPMS
-  cp -r /home/rpmbuild/RPMS/* /home/rpm
-
-  cd /home/rpm
-  createrepo .
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:create ceph local source failed!" ERROR && return 1
-
-  if [ ! -d "/home/oath" ]; then
-    mkdir -p /home/oath
-  fi
-
-  cd /home/oath
-  createrepo .
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:create oath local source failed!" ERROR && return 1
-
-  globalcache_log "------------create local source end------------" WARN
-} 
-
-# 配置镜像仓库
-function configure_repo()
-{
-  globalcache_log "------------configure mirror repo start------------" WARN
-
-  if [ $(cat "/etc/yum.repos.d/local.repo" | grep "[local]" | wc -l) -eq 0]; then
-  echo "[local]
-name=local
-baseurl=file:///home/rpm
-enabled=1
-gpgcheck=0
-priority=1" >> /etc/yum.repos.d/local.repo
-  fi
-
-  globalcache_log "------------configure mirror repo start------------" WARN
-}
 
 function main()
 {
@@ -92,12 +49,6 @@ function main()
   configure_profile
 
   install_dependency_packages
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure Global Cache environment failed!" ERROR && return 1
-
-  create_local_source
-  [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure Global Cache environment failed!" ERROR && return 1
-
-  configure_repo
   [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:configure Global Cache environment failed!" ERROR && return 1
 }
 main
