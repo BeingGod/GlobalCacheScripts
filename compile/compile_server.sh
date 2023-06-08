@@ -38,8 +38,7 @@ function server_prepare()
     if [ -d "server/adaptorlib/ceph-global-cache-adaptor" ]; then
         globalcache_log "ceph-global-cache-adaptor does not need to be prepared." INFO
     else
-        tar -xzvf /home/ceph-global-cache-adaptor-T14.tar.gz
-        cp -r /home/ceph-global-cache-adaptor-T14 server/adaptor/lib
+        tar -xzvf /home/ceph-global-cache-adaptor-T14.tar.gz -C /home/ceph-global-cache-adaptor
         cd ../../../
         # cd server/adaptorlib
         # git clone https://github.com/666syh/ceph-global-cache-adaptor.git
