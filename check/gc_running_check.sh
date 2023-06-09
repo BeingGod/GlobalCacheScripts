@@ -44,7 +44,7 @@ function gc_running_check()
 function main()
 {
 cd /home
-    server_zookeeper_check # 检查服务端zookeeper
+    # server_zookeeper_check # 检查服务端zookeeper
     server_globalcache_check # 检查服务端globalcache
     gc_running_check
 }

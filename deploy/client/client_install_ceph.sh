@@ -63,7 +63,7 @@ priority=1" >> /etc/yum.repos.d/local.repo
   if [ $(cat "/etc/yum.repos.d/fedora.repo" | grep "[arch_fedora_online]" | wc -l) -eq 0]; then
   echo "[arch_fedora_online]
 name=arch_fedora 
-baseurl=https://archives.fedoraproject.org/pub/archive/fedora/linux/releases/34/Everything/aarch64/os/
+baseurl=https://repo.huaweicloud.com/fedora/releases/36/Everything/aarch64/os/
 enabled=1
 gpgcheck=0 
 priority=2" > /etc/yum.repos.d/fedora.repo
