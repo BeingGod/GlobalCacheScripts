@@ -14,7 +14,7 @@ set "+e"
 # 安装JDK
 function install_jdk()
 {
-  globalcache_log "------------install jdk end------------" WARN
+  globalcache_log "------------install jdk start------------" WARN
 
   cd /home
 
