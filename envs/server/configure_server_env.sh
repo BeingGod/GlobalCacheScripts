@@ -20,7 +20,7 @@ function install_jdk()
 
   dnf install -y tar
   
-  if [ ! -d /usr/local/jdk8u282-b08 ]; then
+  if [ ! -d "/usr/local/jdk8u282-b08" ]; then
     tar -zxvf OpenJDK8U-jdk_aarch64_linux_hotspot_jdk8u282-b08.tar.gz -C /usr/local/
     [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:extract jdk package failed!" ERROR && return 1
   fi
@@ -43,6 +43,10 @@ function install_openssl()
   globalcache_log "------------compile openSSL start------------" WARN
 
   cd /usr/local
+
+  if [ -f "/etc/yum.repos.d/fedora.repo" ]; then
+    sed -i "s/enabled=1/enabled=0/g" /etc/yum.repos.d/fedora.repo
+  fi
 
   yum install net-tools expect haveged dos2unix -y
 

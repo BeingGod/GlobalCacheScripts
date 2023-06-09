@@ -15,12 +15,12 @@ function server_globalcache_check()
 {
     globalcache_log "------------server globalcache check start------------" WARN
 
-    local state=$(systemctl status globalcache | grep -oe "active" | wc -l)
+    local state=$(systemctl status globalcache | grep -oe "running" | wc -l)
     if [ $state -eq 0 ]; then
         globalcache_log "------------globalcache service check failed!------------" FATAL 
     fi
 
-    local state=$(systemctl status ccm | grep -oe "active" | wc -l)
+    local state=$(systemctl status ccm | grep -oe "running" | wc -l)
     if [ $state -eq 0 ]; then
         globalcache_log "------------ccm service check failed!------------" FATAL 
     fi

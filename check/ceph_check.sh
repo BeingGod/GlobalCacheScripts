@@ -39,9 +39,23 @@ function ceph_check()
     globalcache_log "------------check ceph end------------" WARN
 }
 
+function ntp_check()
+{
+    globalcache_log "------------ceph ntpd check start------------" WARN
+
+    local state=$(systemctl status ntpd | grep -oe "running" | wc -l)
+    if [ $state -eq 0 ]; then
+        globalcache_log "------------ntpd service check failed!------------" FATAL 
+    fi
+
+    globalcache_log "------------ceph ntpd check end------------" WARN
+}
+
 function main()
 {
 cd /home
+    ntp_check
+
     ceph_check
 }
 main

@@ -15,6 +15,10 @@ function install_dependencies()
 {
   globalcache_log "------------install dependencies start------------" WARN
 
+  if [ -f "/etc/yum.repos.d/fedora.repo" ]; then
+    sed -i "s/enabled=1/enabled=0/g" /etc/yum.repos.d/fedora.repo
+  fi
+
   yum install -y net-tools sysstat
 
   globalcache_log "------------install dependencies end------------" WARN
@@ -34,9 +38,7 @@ function create_oath_local_source()
     sed -i "s/enabled=1/enabled=0/g" /etc/yum.repos.d/fedora.repo
   fi
 
-  if [ $(yum list installed | grep "createrepo" | wc -l) -eq 0 ]; then
-    yum install createrepo -y
-  fi
+  yum install createrepo -y
 
   cd /home/oath
   if [ ! -d "/home/oath/repodata" ]; then

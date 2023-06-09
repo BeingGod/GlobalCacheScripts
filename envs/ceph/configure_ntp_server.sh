@@ -15,6 +15,10 @@ function configure_ntp_server()
 {
   globalcache_log "------------configure ntp server start------------" WARN
 
+  if [ -f "/etc/yum.repos.d/fedora.repo" ]; then
+    sed -i "s/enabled=1/enabled=0/g" /etc/yum.repos.d/fedora.repo
+  fi
+
   # 判断ntp是否安装
   yum -y install ntp ntpdate
   
@@ -36,7 +40,7 @@ fudge 127.127.1.0
 stratum 8" > /etc/ntp.conf
 
   # 判断ntpd服务是否开启
-  if [[ $(systemctl status ntpd | grep -oe "active" | wc -l) -eq 1 ]]; then
+  if [[ $(systemctl status ntpd | grep -oe "running" | wc -l) -eq 0 ]]; then
     systemctl start ntpd 
     systemctl enable ntpd 
   fi

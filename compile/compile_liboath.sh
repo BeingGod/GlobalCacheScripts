@@ -16,6 +16,10 @@ function liboath_prepare()
 {
     globalcache_log "------------liboath prepare start------------" WARN
 
+    if [ -f "/etc/yum.repos.d/fedora.repo" ]; then
+        sed -i "s/enabled=1/enabled=0/g" /etc/yum.repos.d/fedora.repo
+    fi
+
     yum install git -y
     [[ $? -ne 0 ]] && log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install git failed!" ERROR && return 1
     git config --global http.sslVerify false
@@ -26,7 +30,7 @@ function liboath_prepare()
     else
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:The oath-toolkit already exists." INFO
     fi
-        
+    
     yum install wget rpmdevtools gtk-doc pam-devel xmlsec1-devel libtool libtool-ltdl-devel createrepo cmake -y
     [[ $? -ne 0 ]] && log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:install liboath dependency failed!" ERROR && return 1
     rpmdev-setuptree

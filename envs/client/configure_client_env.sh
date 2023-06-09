@@ -29,6 +29,10 @@ function install_dependency_packages()
 {
   globalcache_log "------------install denpendency packages start------------" WARN
 
+  if [ -f "/etc/yum.repos.d/fedora.repo" ]; then
+    sed -i "s/enabled=1/enabled=0/g" /etc/yum.repos.d/fedora.repo
+  fi
+
   yum install gtk-doc pam-devel rpmdevtools xmlsec1-devel \
               libtool-ltdl-devel createrepo openldap-devel \
               rdma-core-devel lz4-devel expat-devel lttng-ust-devel \
