@@ -43,19 +43,22 @@ function ntp_check()
 {
     globalcache_log "------------ceph ntpd check start------------" WARN
 
-    local state=$(systemctl status ntpd | grep -oe "running" | wc -l)
-    if [ $state -eq 0 ]; then
-        globalcache_log "------------ntpd service check failed!------------" FATAL 
+    local realhostname=$(hostname)
+    if [ $realhostname = "ceph1" ]; then
+        local state=$(systemctl status ntpd | grep -oe "running" | wc -l)
+        if [ $state -eq 0 ]; then
+            globalcache_log "------------ntpd service check failed!------------" FATAL 
+        fi
     fi
-
+    
     globalcache_log "------------ceph ntpd check end------------" WARN
 }
 
 function main()
 {
 cd /home
-    ntp_check
-
     ceph_check
+
+    ntp_check
 }
 main
