@@ -92,8 +92,8 @@ function zookeeper_service()
 
     set +e
     kill -9 $(ps -ef |grep zookeeper |awk '{print $2}')
-    service zookeeper restart
-    
+    # service zookeeper restart
+    systemctl restart zookeeper 
 
     chkconfig --add zookeeper
 

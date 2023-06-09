@@ -30,7 +30,7 @@ function server_globalcache_check()
 function main()
 {
 cd /home
-    # server_zookeeper_check # 检查服务端zookeeper
+    server_zookeeper_check # 检查服务端zookeeper
     server_globalcache_check # 检查服务端globalcache
 }
 main

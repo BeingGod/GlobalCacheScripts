@@ -15,7 +15,7 @@ function server_zookeeper_check()
 {
     globalcache_log "------------server zookeeper check start------------" WARN
 
-    local state=$(systemctl status zookeeper | grep -oe "running" | wc -l)
+    local state=$(systemctl status zookeeper | grep -w -oe "active" | wc -l)
     if [ $state -eq 0 ]; then
         globalcache_log "------------zookeeper service check failed!------------" FATAL 
     fi

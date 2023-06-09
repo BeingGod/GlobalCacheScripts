@@ -40,7 +40,7 @@ fudge 127.127.1.0
 stratum 8" > /etc/ntp.conf
 
   # 判断ntpd服务是否开启
-  if [[ $(systemctl status ntpd | grep -oe "running" | wc -l) -eq 0 ]]; then
+  if [[ $(systemctl status ntpd | grep -w -oe "active" | wc -l) -eq 0 ]]; then
     systemctl start ntpd 
     systemctl enable ntpd 
   fi

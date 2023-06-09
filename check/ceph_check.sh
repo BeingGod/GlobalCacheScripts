@@ -45,12 +45,12 @@ function ntp_check()
 
     local realhostname=$(hostname)
     if [ $realhostname = "ceph1" ]; then
-        local state=$(systemctl status ntpd | grep -oe "running" | wc -l)
+        local state=$(systemctl status ntpd | grep -w -oe "active" | wc -l)
         if [ $state -eq 0 ]; then
             globalcache_log "------------ntpd service check failed!------------" FATAL 
         fi
     fi
-    
+
     globalcache_log "------------ceph ntpd check end------------" WARN
 }
 
