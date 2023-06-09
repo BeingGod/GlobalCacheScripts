@@ -25,7 +25,7 @@ function create_local_source()
     sed -i "s/enabled=1/enabled=0/g" /etc/yum.repos.d/fedora.repo
   fi
 
-  if [ $(yum list installed | grep "createrepo" | wc -l) -eq 0]; then
+  if [ $(yum list installed | grep "createrepo" | wc -l) -eq 0 ]; then
     yum install createrepo -y
   fi
 
