@@ -45,12 +45,16 @@ function distribute_to_client_check()
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:mxml-3.2.tar.gz is not exist!" FATAL
     fi
 
-    if [[ ! -f "/home/boostkit-globalcache-release-1.1.0.oe1.aarch64.rpm" ]]; then
-        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:boostkit-globalcache-release-1.1.0.oe1.aarch64.rpm is not exist!" FATAL
+    if [[ -f "/home/boostkit-globalcache-release-${VERSION}.oe1.${uname -m}.rpm" ]]; then
+        pdcp -g client "/home/boostkit-globalcache-release-${VERSION}.oe1.${uname -m}.rpm" "/home"
+    else
+        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:boostkit-globalcache-release-${VERSION}.oe1.${uname -m}.rpm is not exist!" ERROR && return 1
     fi
 
-    if [[ ! -f "/home/boostkit-globalcache-ceph-adaptor-release-1.1.0.oe1.aarch64.rpm" ]]; then
-        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:boostkit-globalcache-ceph-adaptor-release-1.1.0.oe1.aarch64.rpm is not exist!" FATAL
+    if [[ -f "/home/boostkit-globalcache-ceph-adaptor-release-${VERSION}.oe1.$(uname -m).rpm" ]]; then
+        pdcp -g client "boostkit-globalcache-ceph-adaptor-release-${VERSION}.oe1.$(uname -m).rpm" "/home"
+    else
+        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:boostkit-globalcache-ceph-adaptor-release-${VERSION}.oe1.$(uname -m).rpm is not exist!" ERROR && return 1
     fi
 
     if [[ ! -f "/home/boostkit-zk-secure.tar.gz" ]]; then
@@ -84,8 +88,10 @@ function distribute_to_server_check()
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:apache-zookeeper-3.6.3.tar.gz is not exist!" FATAL
     fi
 
-    if [[ ! -f "/home/boostkit-globalcache-release-1.1.0.oe1.aarch64.rpm" ]]; then
-        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:boostkit-globalcache-release-1.1.0.oe1.aarch64.rpm is not exist!" FATAL
+    if [[ -f "/home/boostkit-globalcache-release-${VERSION}.oe1.${uname -m}.rpm" ]]; then
+        pdcp -g client "/home/boostkit-globalcache-release-${VERSION}.oe1.${uname -m}.rpm" "/home"
+    else
+        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:boostkit-globalcache-release-${VERSION}.oe1.${uname -m}.rpm is not exist!" ERROR && return 1
     fi
 
     if [[ ! -f "/home/boostkit-zk-secure.tar.gz" ]]; then
