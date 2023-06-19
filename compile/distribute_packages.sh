@@ -87,12 +87,6 @@ function distribute_to_client()
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:mxml-3.2.tar.gz is not exist!" ERROR && return 1
     fi
 
-    if [[ -f "/home/fio-3.26.tar.gz" ]]; then
-        pdcp -g client "/home/fio-3.26.tar.gz" "/home"
-    else
-        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:fio-3.26.tar.gz is not exist!" ERROR && return 1
-    fi
-
     if [[ -f "/home/boostkit-globalcache-release-1.1.0.oe1.aarch64.rpm" ]]; then
         pdcp -g client "/home/boostkit-globalcache-release-1.1.0.oe1.aarch64.rpm" "/home"
     else

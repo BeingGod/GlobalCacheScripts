@@ -45,10 +45,6 @@ function distribute_to_client_check()
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:mxml-3.2.tar.gz is not exist!" FATAL
     fi
 
-    if [[ ! -f "/home/fio-3.26.tar.gz" ]]; then
-        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:fio-3.26.tar.gz is not exist!" FATAL
-    fi
-
     if [[ ! -f "/home/boostkit-globalcache-release-1.1.0.oe1.aarch64.rpm" ]]; then
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:boostkit-globalcache-release-1.1.0.oe1.aarch64.rpm is not exist!" FATAL
     fi
