@@ -68,10 +68,10 @@ function distribute_to_client()
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:ceph-global-cache-tls.patch is not exist!" ERROR && return 1
     fi
 
-    if [[ -f "/home/ceph-global-cache-adaptor-T14.tar.gz" ]]; then
-        pdcp -g client "/home/ceph-global-cache-adaptor-T14.tar.gz" "/home"
+    if [[ -d "/home/ceph-global-cache-adaptor" ]]; then
+        pdcp -g client -r "/home/ceph-global-cache-adaptor" "/home"
     else
-        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:ceph-global-cache-adaptor-T14.tar.gz is not exist!" ERROR && return 1
+        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:ceph-global-cache-adaptor is not exist!" ERROR && return 1
     fi
 
 

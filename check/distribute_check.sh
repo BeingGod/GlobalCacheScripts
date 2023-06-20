@@ -41,6 +41,10 @@ function distribute_to_client_check()
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:globalcache-ceph-adaptor-spec.patch is not exist!" FATAL
     fi
 
+    if [[ -d "/home/ceph-global-cache-adaptor" ]]; then
+        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:ceph-global-cache-adaptor is not exist!" FATAL
+    fi
+
     if [[ ! -f "/home/mxml-3.2.tar.gz" ]]; then
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:mxml-3.2.tar.gz is not exist!" FATAL
     fi
