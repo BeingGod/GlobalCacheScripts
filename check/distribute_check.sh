@@ -49,10 +49,10 @@ function distribute_to_client_check()
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:mxml-3.2.tar.gz is not exist!" FATAL
     fi
 
-    if [[ -f "/home/boostkit-globalcache-release-${VERSION}.oe1.${uname -m}.rpm" ]]; then
-        pdcp -g client "/home/boostkit-globalcache-release-${VERSION}.oe1.${uname -m}.rpm" "/home"
+    if [[ -f "/home/boostkit-globalcache-release-${VERSION}.oe1.$(uname -m).rpm" ]]; then
+        pdcp -g client "/home/boostkit-globalcache-release-${VERSION}.oe1.$(uname -m).rpm" "/home"
     else
-        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:boostkit-globalcache-release-${VERSION}.oe1.${uname -m}.rpm is not exist!" ERROR && return 1
+        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:boostkit-globalcache-release-${VERSION}.oe1.$(uname -m).rpm is not exist!" ERROR && return 1
     fi
 
     if [[ -f "/home/boostkit-globalcache-ceph-adaptor-release-${VERSION}.oe1.$(uname -m).rpm" ]]; then
@@ -92,10 +92,10 @@ function distribute_to_server_check()
         globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:apache-zookeeper-3.6.3.tar.gz is not exist!" FATAL
     fi
 
-    if [[ -f "/home/boostkit-globalcache-release-${VERSION}.oe1.${uname -m}.rpm" ]]; then
-        pdcp -g client "/home/boostkit-globalcache-release-${VERSION}.oe1.${uname -m}.rpm" "/home"
+    if [[ -f "/home/boostkit-globalcache-release-${VERSION}.oe1.$(uname -m).rpm" ]]; then
+        pdcp -g client "/home/boostkit-globalcache-release-${VERSION}.oe1.$(uname -m).rpm" "/home"
     else
-        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:boostkit-globalcache-release-${VERSION}.oe1.${uname -m}.rpm is not exist!" ERROR && return 1
+        globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:boostkit-globalcache-release-${VERSION}.oe1.$(uname -m).rpm is not exist!" ERROR && return 1
     fi
 
     if [[ ! -f "/home/boostkit-zk-secure.tar.gz" ]]; then
