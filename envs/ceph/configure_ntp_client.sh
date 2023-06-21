@@ -14,6 +14,10 @@ set "+e"
 function configure_ntp_client()
 {
   globalcache_log "------------configure ntp client start------------" WARN
+  
+  if [ -f "/etc/yum.repos.d/fedora.repo" ]; then
+    sed -i "s/enabled=1/enabled=0/g" /etc/yum.repos.d/fedora.repo
+  fi
 
   # 判断ntp是否安装
   yum -y install ntp ntpdate
