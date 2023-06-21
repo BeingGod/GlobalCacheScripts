@@ -23,7 +23,7 @@ function main()
     IFS="$OLD_IFS"
     for var in ${array[@]}
     do
-       lsblk -d -o name,rota | grep $var
+       lsblk -d -o name,rota,size | grep $var
     done
 }
 main
