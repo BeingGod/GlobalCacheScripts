@@ -30,8 +30,9 @@ function partition()
 
   for data_disk in $data_disk_list
   do
-    parted -s /dev/$data_disk mklabel gpt
     ceph-volume lvm zap /dev/$data_disk --destroy
+    sleep 5
+    parted -s /dev/$data_disk mklabel gpt
   done
 
   for nvme in $nvme_list
