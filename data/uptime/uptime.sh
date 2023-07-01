@@ -17,6 +17,9 @@ function main()
     if [[ -z $uptime ]]; then
        local uptime=$(uptime | grep -oe "[0-9]*:[0-9]*,")
     fi
+    if [[ -z $uptime ]]; then
+        local uptime=$(uptime | grep -oe "[1-9]* min,")
+    fi
     [[ $? -ne 0 ]] && globalcache_log "[$BASH_SOURCE,$LINENO,$FUNCNAME]:read uptime failed!" ERROR && return 1
     echo $uptime
 }
