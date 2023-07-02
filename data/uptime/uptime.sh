@@ -15,6 +15,9 @@ function main()
 {
     local uptime=$(uptime | grep -E -oe "[0-9]* days, \s*[0-9]*:[0-9]*,")
     if [[ -z $uptime ]]; then
+        local uptime=$(uptime | grep -oe "[0-9]* days, \s[1-9]* min,")
+    fi
+    if [[ -z $uptime ]]; then
        local uptime=$(uptime | grep -oe "[0-9]*:[0-9]*,")
     fi
     if [[ -z $uptime ]]; then
