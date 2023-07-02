@@ -32,7 +32,7 @@ function partition()
   do
     ceph-volume lvm zap /dev/$data_disk --destroy
     sleep 5
-    parted -s /dev/$data_disk mklabel gpt
+    parted -s /dev/$data_disk
   done
 
   for nvme in $nvme_list
